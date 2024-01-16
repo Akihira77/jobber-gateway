@@ -1,5 +1,6 @@
 import "express-async-errors";
 import http from "http";
+
 import {
     CLIENT_URL,
     ELASTIC_SEARCH_URL,
@@ -33,7 +34,7 @@ import { appRoutes } from "@gateway/routes";
 const PORT = 4000;
 const log: Logger = winstonLogger(
     `${ELASTIC_SEARCH_URL}`,
-    `apiGatewayServer`,
+    "apiGatewayServer",
     "debug"
 );
 
@@ -123,7 +124,7 @@ export class GatewayServer {
             const httpServer: http.Server = new http.Server(app);
             this.startHttpServer(httpServer);
         } catch (error) {
-            log.error(`GatewayService startServer() method error:`, error);
+            log.error("GatewayService startServer() method error:", error);
         }
     }
 
@@ -137,7 +138,7 @@ export class GatewayServer {
                 log.info(`Gateway server running on port ${PORT}`);
             });
         } catch (error) {
-            log.error(`GatewayService startServer() method error:`, error);
+            log.error("GatewayService startServer() method error:", error);
         }
     }
 }

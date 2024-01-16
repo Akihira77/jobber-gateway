@@ -26,7 +26,7 @@ class AuthMiddleware {
         } catch (error) {
             throw new NotAuthorizedError(
                 "Token is not correct. Please login again",
-                `GatewayService verifyUser() method invalid session error`
+                "GatewayService verifyUser() method invalid session error"
             );
         }
 
@@ -41,7 +41,7 @@ class AuthMiddleware {
         if (!req.currentUser) {
             throw new BadRequestError(
                 "Authentication is required to access this route",
-                `GatewayService checkAuthentication() method error`
+                "GatewayService checkAuthentication() method error"
             );
         }
 

@@ -13,7 +13,7 @@ export class AxiosService {
         baseUrl: string,
         serviceName?: string
     ): ReturnType<typeof axios.create> {
-        let gatewayToken = ``;
+        let gatewayToken = "";
         if (serviceName) {
             gatewayToken = jwt.sign(
                 { id: serviceName },
