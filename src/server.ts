@@ -30,6 +30,7 @@ import compression from "compression";
 import { StatusCodes } from "http-status-codes";
 import { elasticSearch } from "@gateway/elasticsearch";
 import { appRoutes } from "@gateway/routes";
+import { axiosAuthInstance } from "@gateway/services/api/auth.api.service";
 
 const PORT = 4000;
 const log: Logger = winstonLogger(
@@ -74,6 +75,15 @@ export class GatewayServer {
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
             })
         );
+
+        app.use((req: Request, _res: Response, next: NextFunction) => {
+            if (req.session?.jwt) {
+                axiosAuthInstance.defaults.headers["Authorization"] =
+                    `Bearer ${req.session?.jwt}`;
+            }
+
+            next();
+        });
     }
 
     private standardMiddleware(app: Application): void {

@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@Akihira77/jobber-shared": "^0.0.5",
+    "@Akihira77/jobber-shared": "^0.0.6",
     "@elastic/elasticsearch": "^8.11.0",
     "axios": "^1.6.5",
     "bcrypt": "^5.1.1",
