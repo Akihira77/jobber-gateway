@@ -1,5 +1,5 @@
-import "express-async-errors";
 import http from "http";
+import "express-async-errors";
 
 import {
     CLIENT_URL,
@@ -31,8 +31,10 @@ import { StatusCodes } from "http-status-codes";
 import { elasticSearch } from "@gateway/elasticsearch";
 import { appRoutes } from "@gateway/routes";
 import { axiosAuthInstance } from "@gateway/services/api/auth.api.service";
+import { isAxiosError } from "axios";
 
 const PORT = 4000;
+const DEFAULT_ERROR_CODE = 500;
 const log: Logger = winstonLogger(
     `${ELASTIC_SEARCH_URL}`,
     "apiGatewayServer",
@@ -119,10 +121,23 @@ export class GatewayServer {
                 res: Response,
                 next: NextFunction
             ) => {
-                log.error(`GatewayService ${error.comingFrom}:`, error);
-
                 if (error instanceof CustomError) {
+                    log.error(`GatewayService ${error.comingFrom}:`, error);
                     res.status(error.statusCode).json(error.serializeErrors());
+                }
+
+                if (isAxiosError(error)) {
+                    log.log(
+                        "error",
+                        `GatewayService Axios Error - ${error?.response?.data?.comingFrom}:`,
+                        error.message
+                    );
+                    res.status(
+                        error?.response?.data?.statusCode ?? DEFAULT_ERROR_CODE
+                    ).json({
+                        message:
+                            error?.response?.data?.message ?? "Error occurred."
+                    });
                 }
                 next();
             }

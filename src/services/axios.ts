@@ -13,12 +13,9 @@ export class AxiosService {
         baseUrl: string,
         serviceName?: string
     ): ReturnType<typeof axios.create> {
-        let gatewayToken = "";
+        let gatewaytoken = "";
         if (serviceName) {
-            gatewayToken = jwt.sign(
-                { id: serviceName },
-                `${GATEWAY_JWT_TOKEN}`
-            );
+            gatewaytoken = jwt.sign({ id: serviceName }, GATEWAY_JWT_TOKEN!);
         }
 
         const instance: ReturnType<typeof axios.create> = axios.create({
@@ -26,7 +23,7 @@ export class AxiosService {
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
-                gatewayToken
+                gatewaytoken
             },
             withCredentials: true
         });
