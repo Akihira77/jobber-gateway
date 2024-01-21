@@ -1,4 +1,5 @@
 import { Password } from "@gateway/controllers/auth/password";
+import { AuthSeed } from "@gateway/controllers/auth/seed";
 import { SignIn } from "@gateway/controllers/auth/signIn";
 import { SignUp } from "@gateway/controllers/auth/signUp";
 import { VerifyEmail } from "@gateway/controllers/auth/verifyEmail";
@@ -27,6 +28,7 @@ class AuthRoutes {
             "/auth/change-password",
             Password.prototype.changePassword
         );
+        this.router.put("/auth/seed/:count", AuthSeed.prototype.generate);
 
         return this.router;
     }

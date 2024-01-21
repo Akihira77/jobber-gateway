@@ -127,8 +127,8 @@ class AuthService {
         return response;
     }
 
-    async seed(count: number): Promise<AxiosResponse> {
-        const response: AxiosResponse = await this.axiosService.axios.get(
+    async seed(count: string): Promise<AxiosResponse> {
+        const response: AxiosResponse = await this.axiosService.axios.put(
             `/seed/${count}`
         );
 
