@@ -32,6 +32,8 @@ import { elasticSearch } from "@gateway/elasticsearch";
 import { appRoutes } from "@gateway/routes";
 import { axiosAuthInstance } from "@gateway/services/api/auth.api.service";
 import { isAxiosError } from "axios";
+import { axiosBuyerInstance } from "@gateway/services/api/buyer.api.service";
+import { axiosSellerInstance } from "@gateway/services/api/seller.api.service";
 
 const PORT = 4000;
 const DEFAULT_ERROR_CODE = 500;
@@ -82,6 +84,10 @@ export class GatewayServer {
             if (req.session?.jwt) {
                 axiosAuthInstance.defaults.headers["Authorization"] =
                     `Bearer ${req.session?.jwt}`;
+                axiosBuyerInstance.defaults.headers["Authorization"] =
+                    `Bearer ${req.session?.jwt}`;
+                axiosSellerInstance.defaults.headers["Authorization"] =
+                    `Bearer ${req.session?.jwt}`;
             }
 
             next();
@@ -127,6 +133,7 @@ export class GatewayServer {
                 }
 
                 if (isAxiosError(error)) {
+                    // console.log(error);
                     log.log(
                         "error",
                         `GatewayService Axios Error - ${error?.response?.data?.comingFrom}:`,
