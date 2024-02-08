@@ -11,6 +11,7 @@ export const {
     CLIENT_URL,
     GATEWAY_JWT_TOKEN,
     GIG_BASE_URL,
+    REDIS_HOST,
     JWT_TOKEN,
     ELASTIC_SEARCH_URL,
     MESSAGE_BASE_URL,

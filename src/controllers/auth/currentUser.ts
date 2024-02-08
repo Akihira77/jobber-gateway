@@ -1,6 +1,10 @@
+import { GatewayCache } from "@gateway/redis/gateway.cache";
+import { socketIO } from "@gateway/server";
 import { authService } from "@gateway/services/api/auth.api.service";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+
+const gatewayCache = new GatewayCache();
 
 export class CurrentUser {
     public async get(
@@ -30,6 +34,31 @@ export class CurrentUser {
         res.status(StatusCodes.OK).json({
             message,
             user
+        });
+    }
+
+    public async getLoggedInUsers(_req: Request, res: Response): Promise<void> {
+        const response =
+            await gatewayCache.getLoggedInUsersFromCache("loggedInUsers");
+        socketIO.emit("online", response);
+
+        res.status(StatusCodes.OK).json({
+            message: "User is online"
+        });
+    }
+
+    public async removeLoggedInUsers(
+        req: Request,
+        res: Response
+    ): Promise<void> {
+        const response = await gatewayCache.removeLoggedInUserFromCache(
+            "loggedInUsers",
+            req.params.username
+        );
+        socketIO.emit("online", response);
+
+        res.status(StatusCodes.OK).json({
+            message: "User is offline"
         });
     }
 }

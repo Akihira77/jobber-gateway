@@ -16,6 +16,7 @@ declare global {
             MESSAGE_BASE_URL: string;
             ORDER_BASE_URL: string;
             REVIEW_BASE_URL: string;
+            REDIS_HOST: string;
             ELASTIC_SEARCH_URL: string;
             ELASTIC_APM_SERVER_URL: string;
             ELASTIC_APM_SECRET_TOKEN: string;
