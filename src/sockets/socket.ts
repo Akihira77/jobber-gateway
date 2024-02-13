@@ -1,5 +1,14 @@
-import { IMessageDocument, winstonLogger } from "@Akihira77/jobber-shared";
-import { ELASTIC_SEARCH_URL, MESSAGE_BASE_URL } from "@gateway/config";
+import {
+    IMessageDocument,
+    IOrderDocument,
+    IOrderNotifcation,
+    winstonLogger
+} from "@Akihira77/jobber-shared";
+import {
+    ELASTIC_SEARCH_URL,
+    MESSAGE_BASE_URL,
+    ORDER_BASE_URL
+} from "@gateway/config";
 import { GatewayCache } from "@gateway/redis/gateway.cache";
 import { Server, Socket } from "socket.io";
 import { io, Socket as SocketClient } from "socket.io-client";
@@ -11,6 +20,7 @@ const log: Logger = winstonLogger(
     "debug"
 );
 let chatSocketClient: SocketClient;
+let orderSocketClient: SocketClient;
 
 export class SocketIOAppHandler {
     private io: Server;
@@ -20,11 +30,13 @@ export class SocketIOAppHandler {
         this.io = io;
         this.gatewayCache = new GatewayCache();
         this.chatSocketServerIOConnection();
+        this.orderSocketServerIOConnection();
     }
 
     // Listening event from Front End
     public listen(): void {
         this.chatSocketServerIOConnection();
+        this.orderSocketServerIOConnection();
 
         this.io.on("connection", async (socket: Socket) => {
             socket.on("getLoggedInUsers", async () => {
@@ -71,7 +83,7 @@ export class SocketIOAppHandler {
         });
     }
 
-    // Listening event from another service
+    // Listening event from another chat service
     private chatSocketServerIOConnection(): void {
         chatSocketClient = io(`${MESSAGE_BASE_URL}`, {
             transports: ["websocket", "polling"],
@@ -105,5 +117,40 @@ export class SocketIOAppHandler {
         chatSocketClient.on("message_updated", (data: IMessageDocument) => {
             this.io.emit("message_updated", data);
         });
+    }
+
+    // Listening event from order service
+    private orderSocketServerIOConnection(): void {
+        orderSocketClient = io(`${ORDER_BASE_URL}`, {
+            transports: ["websocket", "polling"],
+            secure: true
+        });
+
+        orderSocketClient.on("connect", () => {
+            log.info("OrderService socket connected");
+        });
+
+        orderSocketClient.on(
+            "disconnect",
+            (reason: SocketClient.DisconnectReason) => {
+                log.error("Order Socket disconnect reason:", reason);
+
+                orderSocketClient.connect();
+            }
+        );
+
+        orderSocketClient.on("connect_error", (error: Error) => {
+            log.error("Order Socket connection error:", error);
+
+            orderSocketClient.connect();
+        });
+
+        // Custom events
+        orderSocketClient.on(
+            "order_notification",
+            (order: IOrderDocument, orderNotification: IOrderNotifcation) => {
+                this.io.emit("order_notification", order, orderNotification);
+            }
+        );
     }
 }

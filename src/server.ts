@@ -41,6 +41,7 @@ import { createClient } from "redis";
 import { createAdapter } from "@socket.io/redis-adapter";
 import { SocketIOAppHandler } from "@gateway/sockets/socket";
 import { axiosMessageInstance } from "@gateway/services/api/message.api.service";
+import { axiosOrderInstance } from "@gateway/services/api/order.api.service";
 
 const PORT = 4000;
 const DEFAULT_ERROR_CODE = 500;
@@ -99,6 +100,8 @@ export class GatewayServer {
                 axiosGigInstance.defaults.headers["Authorization"] =
                     `Bearer ${req.session?.jwt}`;
                 axiosMessageInstance.defaults.headers["Authorization"] =
+                    `Bearer ${req.session?.jwt}`;
+                axiosOrderInstance.defaults.headers["Authorization"] =
                     `Bearer ${req.session?.jwt}`;
             }
 
