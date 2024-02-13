@@ -7,6 +7,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export const {
+    PORT,
     AUTH_BASE_URL,
     CLIENT_URL,
     GATEWAY_JWT_TOKEN,

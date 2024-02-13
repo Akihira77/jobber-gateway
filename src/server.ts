@@ -5,6 +5,7 @@ import {
     CLIENT_URL,
     ELASTIC_SEARCH_URL,
     NODE_ENV,
+    PORT,
     REDIS_HOST,
     SECRET_KEY_ONE,
     SECRET_KEY_TWO
@@ -43,7 +44,6 @@ import { SocketIOAppHandler } from "@gateway/sockets/socket";
 import { axiosMessageInstance } from "@gateway/services/api/message.api.service";
 import { axiosOrderInstance } from "@gateway/services/api/order.api.service";
 
-const PORT = 4000;
 const DEFAULT_ERROR_CODE = 500;
 const log: Logger = winstonLogger(
     `${ELASTIC_SEARCH_URL}`,
@@ -200,7 +200,7 @@ export class GatewayServer {
                 `Gateway server has started with process id ${process.pid}`
             );
 
-            httpServer.listen(PORT, () => {
+            httpServer.listen(Number(PORT), () => {
                 log.info(`Gateway server running on port ${PORT}`);
             });
         } catch (error) {
