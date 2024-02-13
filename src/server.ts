@@ -43,6 +43,7 @@ import { createAdapter } from "@socket.io/redis-adapter";
 import { SocketIOAppHandler } from "@gateway/sockets/socket";
 import { axiosMessageInstance } from "@gateway/services/api/message.api.service";
 import { axiosOrderInstance } from "@gateway/services/api/order.api.service";
+import { axiosReviewInstance } from "@gateway/services/api/review.api.service";
 
 const DEFAULT_ERROR_CODE = 500;
 const log: Logger = winstonLogger(
@@ -102,6 +103,8 @@ export class GatewayServer {
                 axiosMessageInstance.defaults.headers["Authorization"] =
                     `Bearer ${req.session?.jwt}`;
                 axiosOrderInstance.defaults.headers["Authorization"] =
+                    `Bearer ${req.session?.jwt}`;
+                axiosReviewInstance.defaults.headers["Authorization"] =
                     `Bearer ${req.session?.jwt}`;
             }
 
