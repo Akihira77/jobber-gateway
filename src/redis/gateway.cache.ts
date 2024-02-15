@@ -18,14 +18,18 @@ export class GatewayCache {
         this.client = createClient({ url: `${REDIS_HOST}` });
     }
 
+    private async reconnectingClient(): Promise<void> {
+        if (!this.client.isOpen) {
+            await this.client.connect();
+        }
+    }
+
     public async saveUserSelectedCategory(
         key: string,
         value: string
     ): Promise<void> {
         try {
-            if (!this.client.isOpen) {
-                await this.client.connect();
-            }
+            await this.reconnectingClient();
 
             await this.client.SET(key, value);
         } catch (error) {
@@ -41,9 +45,7 @@ export class GatewayCache {
         value: string
     ): Promise<string[]> {
         try {
-            if (!this.client.isOpen) {
-                await this.client.connect();
-            }
+            await this.reconnectingClient();
 
             const index: number | null = await this.client.LPOS(key, value);
             if (index === null) {
@@ -65,9 +67,7 @@ export class GatewayCache {
 
     public async getLoggedInUsersFromCache(key: string): Promise<string[]> {
         try {
-            if (!this.client.isOpen) {
-                await this.client.connect();
-            }
+            await this.reconnectingClient();
 
             const result: string[] = await this.client.LRANGE(key, 0, -1);
 
@@ -86,9 +86,7 @@ export class GatewayCache {
         value: string
     ): Promise<string[]> {
         try {
-            if (!this.client.isOpen) {
-                await this.client.connect();
-            }
+            await this.reconnectingClient();
 
             await this.client.LREM(key, 1, value);
 

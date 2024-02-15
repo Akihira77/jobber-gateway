@@ -21,5 +21,22 @@ export const {
     REVIEW_BASE_URL,
     SECRET_KEY_ONE,
     SECRET_KEY_TWO,
-    USERS_BASE_URL
+    USERS_BASE_URL,
+    ELASTIC_APM_SECRET_TOKEN,
+    ELASTIC_APM_SERVER_URL,
+    ELASTIC_APM_SERVICE_NAME,
+    ENABLE_APM
 } = process.env;
+
+if (ENABLE_APM == "1") {
+    require("elastic-apm-node").start({
+        serviceName: `${ELASTIC_APM_SERVICE_NAME}`,
+        serverUrl: ELASTIC_APM_SERVER_URL,
+        secretToken: ELASTIC_APM_SECRET_TOKEN,
+        enironment: NODE_ENV,
+        active: true,
+        captureBody: "all",
+        errorOnAbortedRequests: true,
+        captureErrorLogStackTraces: "always"
+    });
+}
