@@ -76,8 +76,10 @@ export class GatewayServer {
                 name: "session",
                 keys: [`${SECRET_KEY_ONE}`, `${SECRET_KEY_TWO}`],
                 maxAge: 7 * 24 * 36 * 10 * 1000, // 7 days,
-                secure: NODE_ENV !== "development" // updated with value from config,
-                // sameSite: none
+                secure: NODE_ENV !== "development", // updated with value from config,
+                ...(NODE_ENV !== "development" && {
+                    sameSite: "none"
+                })
             })
         );
         app.use(hpp());

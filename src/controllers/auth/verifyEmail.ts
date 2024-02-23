@@ -3,10 +3,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export class VerifyEmail {
-    public async update(
-        req: Request<never, never, { token: string }, never>,
-        res: Response
-    ): Promise<void> {
+    public async update(req: Request, res: Response): Promise<void> {
         const response = await authService.verifyEmail(req.body.token);
 
         // look at signUp controller returned inside 3-auth-service
