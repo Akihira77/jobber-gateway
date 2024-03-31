@@ -202,7 +202,7 @@ export class GatewayServer {
     private async startHttpServer(httpServer: http.Server): Promise<void> {
         try {
             log.info(
-                `Gateway server has started with process id ${process.pid}. Date ${Date.now().toString()}`
+                `Gateway server has started with process id ${process.pid}. Date ${new Date()}`
             );
 
             httpServer.listen(Number(PORT), () => {

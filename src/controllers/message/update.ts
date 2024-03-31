@@ -5,7 +5,7 @@ import { StatusCodes } from "http-status-codes";
 export class Update {
     public async offer(req: Request, res: Response): Promise<void> {
         const response = await messageService.updateOffer(
-            req.params.messageId,
+            req.body.messageId,
             req.body.type
         );
 

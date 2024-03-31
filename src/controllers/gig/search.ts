@@ -12,6 +12,8 @@ export class Search {
         objList.forEach(([key, value], index) => {
             query += `${key}=${value}${index !== lastItemIndex ? "&" : ""}`;
         });
+
+        console.log(query);
         const response: AxiosResponse = await gigService.searchGigs(
             `${query}`,
             from,

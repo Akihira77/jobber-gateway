@@ -23,12 +23,12 @@ class OrderRoutes {
             Get.prototype.sellerOrders
         );
         this.router.get(
-            "/order/buyerId/:orderId",
+            "/order/buyer/:orderId",
             authMiddleware.checkAuthentication,
             Get.prototype.buyerOrders
         );
         this.router.get(
-            "/order/notification/:userId",
+            "/order/notification/:userTo",
             authMiddleware.checkAuthentication,
             Get.prototype.notifications
         );

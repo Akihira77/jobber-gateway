@@ -13,7 +13,7 @@ class MessageRoutes {
 
     public routes(): Router {
         this.router.post(
-            "/message/",
+            "/message",
             authMiddleware.checkAuthentication,
             Create.prototype.message
         );
@@ -35,7 +35,7 @@ class MessageRoutes {
         );
 
         this.router.get(
-            "/message/conversation/:senderUsername/:receieverUsername",
+            "/message/conversation/:senderUsername/:receiverUsername",
             authMiddleware.checkAuthentication,
             Get.prototype.conversation
         );
@@ -45,7 +45,7 @@ class MessageRoutes {
             Get.prototype.conversationList
         );
         this.router.get(
-            "/message/:senderUsername/:receieverUsername",
+            "/message/:senderUsername/:receiverUsername",
             authMiddleware.checkAuthentication,
             Get.prototype.messages
         );

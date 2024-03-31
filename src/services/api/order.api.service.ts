@@ -72,7 +72,7 @@ class OrderService {
     ): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosOrderInstance.put(
             `/approve-order/${orderId}`,
-            { orderData: data }
+            data
         );
 
         return response;
@@ -122,7 +122,7 @@ class OrderService {
     ): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosOrderInstance.put(
             `/deliver-order/${orderId}`,
-            { data }
+            data
         );
 
         return response;

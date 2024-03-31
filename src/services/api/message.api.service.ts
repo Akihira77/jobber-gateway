@@ -41,7 +41,7 @@ class MessageService {
 
     async getConversationList(username: string): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosMessageInstance.get(
-            `/conversations/${username}}`
+            `/conversations/${username}`
         );
 
         return response;

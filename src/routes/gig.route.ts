@@ -68,7 +68,7 @@ class GigRoutes {
             Update.prototype.gig
         );
         this.router.put(
-            "/gig/active/:gigId",
+            "/gig/active-status/:gigId",
             authMiddleware.checkAuthentication,
             Update.prototype.gigActiveStatus
         );

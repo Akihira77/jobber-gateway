@@ -12,12 +12,12 @@ class ReviewRoutes {
 
     public routes(): Router {
         this.router.get(
-            "/review/:gigId",
+            "/review/gig/:gigId",
             authMiddleware.checkAuthentication,
             Get.prototype.reviewsByGigId
         );
         this.router.get(
-            "/review/:sellerId",
+            "/review/seller/:sellerId",
             authMiddleware.checkAuthentication,
             Get.prototype.reviewsBySellerId
         );

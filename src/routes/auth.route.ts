@@ -16,7 +16,7 @@ class AuthRoutes {
     public routes(): Router {
         this.router.post("/auth/signup", SignUp.prototype.create);
         this.router.post("/auth/signin", SignIn.prototype.read);
-        this.router.post("/auth/singout", Signout.prototype.update);
+        this.router.put("/auth/signout", Signout.prototype.update);
         this.router.put("/auth/verify-email", VerifyEmail.prototype.update);
         this.router.put(
             "/auth/forgot-password",

@@ -31,7 +31,7 @@ class SellerService {
     }
 
     async getRandomSellers(count: string): Promise<AxiosResponse> {
-        console.log(axiosSellerInstance.getUri() + "/random/" + count);
+        // console.log(axiosSellerInstance.getUri() + "/random/" + count);
         const response = await axiosSellerInstance.get(`/random/${count}`);
 
         return response;

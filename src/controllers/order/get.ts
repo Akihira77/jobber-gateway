@@ -16,7 +16,7 @@ export class Get {
 
     public async sellerOrders(req: Request, res: Response): Promise<void> {
         const response = await orderService.getOrdersBySellerId(
-            req.params.sellerId
+            req.params.orderId
         );
 
         res.status(StatusCodes.OK).json({
@@ -27,7 +27,7 @@ export class Get {
 
     public async buyerOrders(req: Request, res: Response): Promise<void> {
         const response = await orderService.getOrdersByBuyerId(
-            req.params.buyerId
+            req.params.orderId
         );
 
         res.status(StatusCodes.OK).json({
@@ -37,7 +37,7 @@ export class Get {
     }
 
     public async notifications(req: Request, res: Response): Promise<void> {
-        const response = await orderService.getNotifications(req.params.userId);
+        const response = await orderService.getNotifications(req.params.userTo);
 
         res.status(StatusCodes.OK).json({
             message: response.data.message,

@@ -91,7 +91,7 @@ class GigService {
         gigId: string,
         active: boolean
     ): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.put(`/update/${gigId}`, {
+        const response = await axiosGigInstance.put(`/status/${gigId}`, {
             active
         });
 
