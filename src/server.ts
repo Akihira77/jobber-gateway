@@ -149,10 +149,10 @@ export class GatewayServer {
             ) => {
                 if (error instanceof CustomError) {
                     log.error(`GatewayService ${error.comingFrom}:`, error);
-                    res.status(error.statusCode).json(error.serializeErrors());
-                }
-
-                if (isAxiosError(error)) {
+                    res.status(error.statusCode).json({
+                        message: error.message
+                    });
+                } else if (isAxiosError(error)) {
                     // console.log(error);
                     log.log(
                         "error",

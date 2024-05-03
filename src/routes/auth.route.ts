@@ -4,6 +4,7 @@ import { SignIn } from "@gateway/controllers/auth/signIn";
 import { Signout } from "@gateway/controllers/auth/signOut";
 import { SignUp } from "@gateway/controllers/auth/signUp";
 import { VerifyEmail } from "@gateway/controllers/auth/verifyEmail";
+import { authMiddleware } from "@gateway/services/auth-middleware";
 import express, { Router } from "express";
 
 class AuthRoutes {
@@ -28,6 +29,7 @@ class AuthRoutes {
         );
         this.router.put(
             "/auth/change-password",
+            authMiddleware.checkAuthentication,
             Password.prototype.changePassword
         );
         this.router.put("/auth/seed/:count", AuthSeed.prototype.generate);

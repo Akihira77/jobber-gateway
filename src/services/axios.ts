@@ -15,7 +15,11 @@ export class AxiosService {
     ): ReturnType<typeof axios.create> {
         let gatewaytoken = "";
         if (serviceName) {
-            gatewaytoken = jwt.sign({ id: serviceName }, GATEWAY_JWT_TOKEN!);
+            gatewaytoken = jwt.sign({ id: serviceName }, GATEWAY_JWT_TOKEN!, {
+                issuer: "Jobber Auth",
+                algorithm: "HS512",
+                expiresIn: "1d"
+            });
         }
 
         const instance: ReturnType<typeof axios.create> = axios.create({

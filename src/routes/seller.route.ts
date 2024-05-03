@@ -31,12 +31,12 @@ class SellerRoutes {
         this.router.post(
             "/seller/create",
             authMiddleware.checkAuthentication,
-            Create.prototype.seller
+            Create.prototype.newSeller
         );
         this.router.put(
             "/seller/update/:sellerId",
             authMiddleware.checkAuthentication,
-            Update.prototype.seller
+            Update.prototype.sellerProfile
         );
         this.router.put(
             "/seller/seed/:count",
