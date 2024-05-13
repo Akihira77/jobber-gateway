@@ -8,7 +8,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 class AuthMiddleware {
-    public verifyUser(req: Request, _res: Response, next: NextFunction): void {
+    public authOnly(req: Request, _res: Response, next: NextFunction): void {
         if (!req.session?.jwt) {
             throw new NotAuthorizedError(
                 "Token is not available. Please login again",
@@ -19,7 +19,10 @@ class AuthMiddleware {
         try {
             const payload: IAuthPayload = jwt.verify(
                 req.session?.jwt,
-                `${JWT_TOKEN}`
+                `${JWT_TOKEN}`,
+                {
+                    algorithms: ["HS512"]
+                }
             ) as IAuthPayload;
 
             req.currentUser = payload;
@@ -33,11 +36,7 @@ class AuthMiddleware {
         next();
     }
 
-    public checkAuthentication(
-        req: Request,
-        _res: Response,
-        next: NextFunction
-    ): void {
+    public verifyAuth(req: Request, _res: Response, next: NextFunction): void {
         if (!req.currentUser) {
             throw new BadRequestError(
                 "Authentication is required to access this route",

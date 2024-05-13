@@ -1,29 +1,31 @@
-import { Get } from "@gateway/controllers/users/buyer/get";
+import { UserController } from "@gateway/controllers/user.controller";
 import { authMiddleware } from "@gateway/services/auth-middleware";
 import express, { Router } from "express";
 
 class BuyerRoutes {
     private router: Router;
+    private controller: UserController;
 
     constructor() {
         this.router = express.Router();
+        this.controller = new UserController();
     }
 
     public routes(): Router {
         this.router.get(
             "/buyer/email",
-            authMiddleware.checkAuthentication,
-            Get.prototype.byEmail
+            authMiddleware.verifyAuth,
+            this.controller.getBuyerByEmail
         );
         this.router.get(
             "/buyer/username",
-            authMiddleware.checkAuthentication,
-            Get.prototype.byCurrentUsername
+            authMiddleware.verifyAuth,
+            this.controller.getBuyerByUsername
         );
         this.router.get(
             "/buyer/:username",
-            authMiddleware.checkAuthentication,
-            Get.prototype.byUsername
+            authMiddleware.verifyAuth,
+            this.controller.getCurrentBuyer
         );
 
         return this.router;

@@ -6,7 +6,6 @@ import {
     ELASTIC_SEARCH_URL,
     NODE_ENV,
     PORT,
-    REDIS_HOST,
     SECRET_KEY_ONE,
     SECRET_KEY_TWO
 } from "@gateway/config";
@@ -38,12 +37,12 @@ import { axiosBuyerInstance } from "@gateway/services/api/buyer.api.service";
 import { axiosSellerInstance } from "@gateway/services/api/seller.api.service";
 import { axiosGigInstance } from "@gateway/services/api/gig.api.service";
 import { Server } from "socket.io";
-import { createClient } from "redis";
 import { createAdapter } from "@socket.io/redis-adapter";
 import { SocketIOAppHandler } from "@gateway/sockets/socket";
-import { axiosMessageInstance } from "@gateway/services/api/message.api.service";
+import { axiosChatInstance } from "@gateway/services/api/chat.api.service";
 import { axiosOrderInstance } from "@gateway/services/api/order.api.service";
 import { axiosReviewInstance } from "@gateway/services/api/review.api.service";
+import { redisConnection } from "./redis/redis.conection";
 
 const DEFAULT_ERROR_CODE = 500;
 const log: Logger = winstonLogger(
@@ -102,7 +101,7 @@ export class GatewayServer {
                     `Bearer ${req.session?.jwt}`;
                 axiosGigInstance.defaults.headers["Authorization"] =
                     `Bearer ${req.session?.jwt}`;
-                axiosMessageInstance.defaults.headers["Authorization"] =
+                axiosChatInstance.defaults.headers["Authorization"] =
                     `Bearer ${req.session?.jwt}`;
                 axiosOrderInstance.defaults.headers["Authorization"] =
                     `Bearer ${req.session?.jwt}`;
@@ -189,7 +188,7 @@ export class GatewayServer {
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
             }
         });
-        const pubClient = createClient({ url: `${REDIS_HOST}` });
+        const pubClient = redisConnection.client;
         const subClient = pubClient.duplicate();
 
         await Promise.all([pubClient.connect(), subClient.connect()]);

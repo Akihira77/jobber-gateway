@@ -1,78 +1,78 @@
-import { Create } from "@gateway/controllers/order/create";
-import { Update } from "@gateway/controllers/order/update";
-import { Get } from "@gateway/controllers/order/get";
 import express, { Router } from "express";
 import { authMiddleware } from "@gateway/services/auth-middleware";
+import { OrderController } from "@gateway/controllers/order.controller";
 
 class OrderRoutes {
     private router: Router;
+    private controller: OrderController;
 
     constructor() {
         this.router = express.Router();
+        this.controller = new OrderController();
     }
 
     public routes(): Router {
         this.router.get(
             "/order/:orderId",
-            authMiddleware.checkAuthentication,
-            Get.prototype.byOrderId
+            authMiddleware.verifyAuth,
+            this.controller.getOrderByOrderId
         );
         this.router.get(
             "/order/seller/:orderId",
-            authMiddleware.checkAuthentication,
-            Get.prototype.sellerOrders
+            authMiddleware.verifyAuth,
+            this.controller.getSellerOrders
         );
         this.router.get(
             "/order/buyer/:orderId",
-            authMiddleware.checkAuthentication,
-            Get.prototype.buyerOrders
+            authMiddleware.verifyAuth,
+            this.controller.gerBuyerOrders
         );
         this.router.get(
             "/order/notification/:userTo",
-            authMiddleware.checkAuthentication,
-            Get.prototype.notifications
+            authMiddleware.verifyAuth,
+            this.controller.getNotifications
         );
 
         this.router.post(
             "/order/create-payment-intent",
-            authMiddleware.checkAuthentication,
-            Create.prototype.orderIntent
+            authMiddleware.verifyAuth,
+            this.controller.createOrderIntent
         );
         this.router.post(
             "/order",
-            authMiddleware.checkAuthentication,
-            Create.prototype.order
+            authMiddleware.verifyAuth,
+            this.controller.buyerCreateOrder
         );
 
         this.router.put(
             "/order/approve-order/:orderId",
-            authMiddleware.checkAuthentication,
-            Update.prototype.approveOrder
+            authMiddleware.verifyAuth,
+            this.controller.buyerApproveOrder
         );
         this.router.put(
             "/order/cancel/:orderId",
-            authMiddleware.checkAuthentication,
-            Update.prototype.cancelOrder
+            authMiddleware.verifyAuth,
+            this.controller.sellerCancelOrder
         );
         this.router.put(
             "/order/gig/:type/:orderId",
-            authMiddleware.checkAuthentication,
-            Update.prototype.updateDeliveryDate
+            authMiddleware.verifyAuth,
+            this.controller.updateDeliveryDate
         );
         this.router.put(
             "/order/extension/:orderId",
-            authMiddleware.checkAuthentication,
-            Update.prototype.requestDeliveryDateExtension
+            authMiddleware.verifyAuth,
+            this.controller.sellerRequestDeliveryDateExtension
         );
         this.router.put(
             "/order/deliver-order/:orderId",
-            authMiddleware.checkAuthentication,
-            Update.prototype.deliverOrder
+            authMiddleware.verifyAuth,
+            this.controller.sellerDeliverOrder
         );
         this.router.put(
             "/order/notification/:notificationId",
-            authMiddleware.checkAuthentication,
-            Update.prototype.markNotificationAsRead
+            authMiddleware.verifyAuth,
+            this.controller.markNotificationAsRead
         );
 
         return this.router;

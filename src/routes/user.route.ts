@@ -1,42 +1,43 @@
-import { CurrentUser } from "@gateway/controllers/auth/currentUser";
-import { Refresh } from "@gateway/controllers/auth/refreshToken";
+import { AuthController } from "@gateway/controllers/auth.controller";
 import { authMiddleware } from "@gateway/services/auth-middleware";
 import express, { Router } from "express";
 
 class UserRoutes {
     private router: Router;
+    private controller: AuthController;
 
     constructor() {
         this.router = express.Router();
+        this.controller = new AuthController();
     }
 
     public routes(): Router {
         this.router.get(
             "/auth/current-user",
-            authMiddleware.checkAuthentication,
-            CurrentUser.prototype.get
+            authMiddleware.verifyAuth,
+            this.controller.getCurrentUser
         );
         this.router.get(
             "/auth/logged-in-user",
-            authMiddleware.checkAuthentication,
-            CurrentUser.prototype.getLoggedInUsers
+            authMiddleware.verifyAuth,
+            this.controller.getLoggedInUsers
         );
         this.router.get(
             "/auth/refresh-token/:username",
-            authMiddleware.checkAuthentication,
-            Refresh.prototype.token
+            authMiddleware.verifyAuth,
+            this.controller.getRefreshToken
         );
 
         this.router.post(
             "/auth/resend-verification-email",
-            authMiddleware.checkAuthentication,
-            CurrentUser.prototype.resendVerificationEmail
+            authMiddleware.verifyAuth,
+            this.controller.resendVerificationEmail
         );
 
         this.router.delete(
             "/auth/logged-in-user/:username",
-            authMiddleware.checkAuthentication,
-            CurrentUser.prototype.removeLoggedInUsers
+            authMiddleware.verifyAuth,
+            this.controller.removeLoggedInUsers
         );
 
         return this.router;

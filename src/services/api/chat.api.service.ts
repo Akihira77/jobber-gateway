@@ -3,25 +3,25 @@ import { AxiosService } from "@gateway/services/axios";
 import { MESSAGE_BASE_URL } from "@gateway/config";
 import { IMessageDocument } from "@Akihira77/jobber-shared";
 
-export let axiosMessageInstance: ReturnType<typeof axios.create>;
+export let axiosChatInstance: ReturnType<typeof axios.create>;
 
-class MessageService {
+class ChatService {
     // Axios general provider
     axiosService: AxiosService;
 
     constructor() {
         this.axiosService = new AxiosService(
-            `${MESSAGE_BASE_URL}/api/v1/message`,
+            `${MESSAGE_BASE_URL}/message`,
             "message"
         );
-        axiosMessageInstance = this.axiosService.axios;
+        axiosChatInstance = this.axiosService.axios;
     }
 
     async getConversation(
         senderUsername: string,
         receiverUsername: string
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosMessageInstance.get(
+        const response: AxiosResponse = await axiosChatInstance.get(
             `/conversation/${senderUsername}/${receiverUsername}`
         );
 
@@ -32,7 +32,7 @@ class MessageService {
         senderUsername: string,
         receiverUsername: string
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosMessageInstance.get(
+        const response: AxiosResponse = await axiosChatInstance.get(
             `/${senderUsername}/${receiverUsername}`
         );
 
@@ -40,7 +40,7 @@ class MessageService {
     }
 
     async getConversationList(username: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosMessageInstance.get(
+        const response: AxiosResponse = await axiosChatInstance.get(
             `/conversations/${username}`
         );
 
@@ -48,7 +48,7 @@ class MessageService {
     }
 
     async getUserMessages(conversationId: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosMessageInstance.get(
+        const response: AxiosResponse = await axiosChatInstance.get(
             `/${conversationId}`
         );
 
@@ -56,7 +56,7 @@ class MessageService {
     }
 
     async addMessage(request: IMessageDocument): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosMessageInstance.post(
+        const response: AxiosResponse = await axiosChatInstance.post(
             "/",
             request
         );
@@ -65,7 +65,7 @@ class MessageService {
     }
 
     async markMessageAsRead(messageId: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosMessageInstance.put(
+        const response: AxiosResponse = await axiosChatInstance.put(
             `/mark-as-read`,
             { messageId }
         );
@@ -78,7 +78,7 @@ class MessageService {
         senderUsername: string,
         receiverUsername: string
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosMessageInstance.put(
+        const response: AxiosResponse = await axiosChatInstance.put(
             `/mark-multiple-as-read`,
             { senderUsername, receiverUsername, messageId }
         );
@@ -87,13 +87,13 @@ class MessageService {
     }
 
     async updateOffer(messageId: string, type: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosMessageInstance.put(
-            `/offer`,
-            { type, messageId }
-        );
+        const response: AxiosResponse = await axiosChatInstance.put(`/offer`, {
+            type,
+            messageId
+        });
 
         return response;
     }
 }
 
-export const messageService = new MessageService();
+export const messageService = new ChatService();

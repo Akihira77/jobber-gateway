@@ -1,84 +1,82 @@
-import { Create } from "@gateway/controllers/gig/create";
-import { Delete } from "@gateway/controllers/gig/delete";
-import { Get } from "@gateway/controllers/gig/get";
-import { Search } from "@gateway/controllers/gig/search";
-import { GigSeed } from "@gateway/controllers/gig/seed";
-import { Update } from "@gateway/controllers/gig/update";
+import { GigController } from "@gateway/controllers/gig.controller";
 import { authMiddleware } from "@gateway/services/auth-middleware";
 import express, { Router } from "express";
 
 class GigRoutes {
     private router: Router;
+    private controller: GigController;
 
     constructor() {
         this.router = express.Router();
+        this.controller = new GigController();
     }
 
     public routes(): Router {
         this.router.get(
             "/gig/:gigId",
-            authMiddleware.checkAuthentication,
-            Get.prototype.gigById
+            authMiddleware.verifyAuth,
+            this.controller.getGigById
         );
         this.router.get(
             "/gig/seller/:sellerId",
-            authMiddleware.checkAuthentication,
-            Get.prototype.sellerActiveGigs
+            authMiddleware.verifyAuth,
+            this.controller.getSellerActiveGigs
         );
         this.router.get(
             "/gig/seller/inactive/:sellerId",
-            authMiddleware.checkAuthentication,
-            Get.prototype.sellerInactiveGigs
+            authMiddleware.verifyAuth,
+            this.controller.getSellerInactiveGigs
         );
         this.router.get(
             "/gig/search/:from/:size/:type",
-            authMiddleware.checkAuthentication,
-            Search.prototype.gigQuerySearch
+            authMiddleware.verifyAuth,
+            this.controller.getGigsQuerySearch
         );
         this.router.get(
             "/gig/category/:username",
-            authMiddleware.checkAuthentication,
-            Get.prototype.gigsByCategory
+            authMiddleware.verifyAuth,
+            this.controller.getGigsByCategory
         );
         this.router.get(
             "/gig/top/:username",
-            authMiddleware.checkAuthentication,
-            Get.prototype.topRatedGigsByCategory
+            authMiddleware.verifyAuth,
+            this.controller.getTopRatedGigsByCategory
         );
         this.router.get(
             "/gig/similar/:gigId",
-            authMiddleware.checkAuthentication,
-            Get.prototype.gigsMoreLikeThis
+            authMiddleware.verifyAuth,
+            this.controller.getGigsMoreLikeThis
         );
 
         this.router.post(
             "/gig/create",
-            authMiddleware.checkAuthentication,
-            Create.prototype.gig
+            authMiddleware.verifyAuth,
+            this.controller.createGig
         );
 
         this.router.put(
-            "/gig/seed/:count",
-            authMiddleware.checkAuthentication,
-            GigSeed.prototype.generate
-        );
-        this.router.put(
             "/gig/:gigId",
-            authMiddleware.checkAuthentication,
-            Update.prototype.gig
+            authMiddleware.verifyAuth,
+            this.controller.updateGig
         );
+
         this.router.put(
             "/gig/active-status/:gigId",
-            authMiddleware.checkAuthentication,
-            Update.prototype.gigActiveStatus
+            authMiddleware.verifyAuth,
+            this.controller.updateGigActiveStatus
         );
 
         this.router.delete(
             "/gig/:gigId/:sellerId",
-            authMiddleware.checkAuthentication,
-            Delete.prototype.gig
+            authMiddleware.verifyAuth,
+            this.controller.deleteGig
         );
 
+        this.router.put(
+            "/gig/seed/:count",
+            authMiddleware.verifyAuth,
+            this.controller.populateGigs
+        );
         return this.router;
     }
 }

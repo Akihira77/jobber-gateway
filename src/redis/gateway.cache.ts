@@ -1,7 +1,7 @@
 import { winstonLogger } from "@Akihira77/jobber-shared";
-import { ELASTIC_SEARCH_URL, REDIS_HOST } from "@gateway/config";
-import { createClient } from "redis";
+import { ELASTIC_SEARCH_URL } from "@gateway/config";
 import { Logger } from "winston";
+import { RedisClient, redisConnection } from "./redis.conection";
 
 const log: Logger = winstonLogger(
     `${ELASTIC_SEARCH_URL}`,
@@ -9,13 +9,11 @@ const log: Logger = winstonLogger(
     "debug"
 );
 
-export type RedisClient = ReturnType<typeof createClient>;
-
 export class GatewayCache {
     client: RedisClient;
 
     constructor() {
-        this.client = createClient({ url: `${REDIS_HOST}` });
+        this.client = redisConnection.client;
     }
 
     private async reconnectingClient(): Promise<void> {

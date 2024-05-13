@@ -1,38 +1,35 @@
-import { Password } from "@gateway/controllers/auth/password";
-import { AuthSeed } from "@gateway/controllers/auth/seed";
-import { SignIn } from "@gateway/controllers/auth/signIn";
-import { Signout } from "@gateway/controllers/auth/signOut";
-import { SignUp } from "@gateway/controllers/auth/signUp";
-import { VerifyEmail } from "@gateway/controllers/auth/verifyEmail";
+import { AuthController } from "@gateway/controllers/auth.controller";
 import { authMiddleware } from "@gateway/services/auth-middleware";
 import express, { Router } from "express";
 
 class AuthRoutes {
     private router: Router;
+    private controller: AuthController;
 
     constructor() {
         this.router = express.Router();
+        this.controller = new AuthController();
     }
 
     public routes(): Router {
-        this.router.post("/auth/signup", SignUp.prototype.create);
-        this.router.post("/auth/signin", SignIn.prototype.read);
-        this.router.put("/auth/signout", Signout.prototype.update);
-        this.router.put("/auth/verify-email", VerifyEmail.prototype.update);
+        this.router.post("/auth/signup", this.controller.signUp);
+        this.router.post("/auth/signin", this.controller.signIn);
+        this.router.put("/auth/signout", this.controller.signOut);
+        this.router.put("/auth/verify-email", this.controller.verifyEmail);
         this.router.put(
             "/auth/forgot-password",
-            Password.prototype.forgotPassword
+            this.controller.forgotPassword
         );
         this.router.put(
             "/auth/reset-password/:token",
-            Password.prototype.resetPassword
+            this.controller.resetPassword
         );
         this.router.put(
             "/auth/change-password",
-            authMiddleware.checkAuthentication,
-            Password.prototype.changePassword
+            authMiddleware.verifyAuth,
+            this.controller.changePassword
         );
-        this.router.put("/auth/seed/:count", AuthSeed.prototype.generate);
+        this.router.put("/auth/seed/:count", this.controller.populateAuth);
 
         return this.router;
     }

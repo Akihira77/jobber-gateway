@@ -1,31 +1,32 @@
-import { Create } from "@gateway/controllers/review/create";
-import { Get } from "@gateway/controllers/review/get";
+import { ReviewController } from "@gateway/controllers/review.controller";
 import { authMiddleware } from "@gateway/services/auth-middleware";
 import express, { Router } from "express";
 
 class ReviewRoutes {
     private router: Router;
+    private controller: ReviewController;
 
     constructor() {
         this.router = express.Router();
+        this.controller = new ReviewController();
     }
 
     public routes(): Router {
         this.router.get(
             "/review/gig/:gigId",
-            authMiddleware.checkAuthentication,
-            Get.prototype.reviewsByGigId
+            authMiddleware.verifyAuth,
+            this.controller.getReviewsByGigId
         );
         this.router.get(
             "/review/seller/:sellerId",
-            authMiddleware.checkAuthentication,
-            Get.prototype.reviewsBySellerId
+            authMiddleware.verifyAuth,
+            this.controller.getReviewsBySellerId
         );
 
         this.router.post(
             "/review",
-            authMiddleware.checkAuthentication,
-            Create.prototype.review
+            authMiddleware.verifyAuth,
+            this.controller.addReview
         );
 
         return this.router;

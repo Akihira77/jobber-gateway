@@ -2,8 +2,17 @@ import { reviewService } from "@gateway/services/api/review.api.service";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-export class Get {
-    public async reviewsByGigId(req: Request, res: Response): Promise<void> {
+export class ReviewController {
+    public async addReview(req: Request, res: Response): Promise<void> {
+        const response = await reviewService.addReview(req.body);
+
+        res.status(StatusCodes.CREATED).json({
+            message: response.data.message,
+            review: response.data.review
+        });
+    }
+
+    public async getReviewsByGigId(req: Request, res: Response): Promise<void> {
         const response = await reviewService.getReviewsByGigId(
             req.params.gigId
         );
@@ -14,7 +23,10 @@ export class Get {
         });
     }
 
-    public async reviewsBySellerId(req: Request, res: Response): Promise<void> {
+    public async getReviewsBySellerId(
+        req: Request,
+        res: Response
+    ): Promise<void> {
         const response = await reviewService.getReviewsBySellerId(
             req.params.sellerId
         );

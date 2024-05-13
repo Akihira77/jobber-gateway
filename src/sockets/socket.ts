@@ -29,8 +29,6 @@ export class SocketIOAppHandler {
     constructor(io: Server) {
         this.io = io;
         this.gatewayCache = new GatewayCache();
-        this.chatSocketServerIOConnection();
-        this.orderSocketServerIOConnection();
     }
 
     // Listening event from Front End
