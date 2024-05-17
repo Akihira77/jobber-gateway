@@ -3,17 +3,14 @@ import "express-async-errors";
 
 import {
     CLIENT_URL,
-    ELASTIC_SEARCH_URL,
+    logger,
     NODE_ENV,
     PORT,
+    REDIS_HOST,
     SECRET_KEY_ONE,
     SECRET_KEY_TWO
 } from "@gateway/config";
-import {
-    CustomError,
-    IErrorResponse,
-    winstonLogger
-} from "@Akihira77/jobber-shared";
+import { CustomError, IErrorResponse } from "@Akihira77/jobber-shared";
 import cookieSession from "cookie-session";
 import {
     Application,
@@ -23,7 +20,6 @@ import {
     json,
     urlencoded
 } from "express";
-import { Logger } from "winston";
 import hpp from "hpp";
 import helmet from "helmet";
 import cors from "cors";
@@ -42,14 +38,9 @@ import { SocketIOAppHandler } from "@gateway/sockets/socket";
 import { axiosChatInstance } from "@gateway/services/api/chat.api.service";
 import { axiosOrderInstance } from "@gateway/services/api/order.api.service";
 import { axiosReviewInstance } from "@gateway/services/api/review.api.service";
-import { redisConnection } from "./redis/redis.conection";
+import { createClient } from "redis";
 
 const DEFAULT_ERROR_CODE = 500;
-const log: Logger = winstonLogger(
-    `${ELASTIC_SEARCH_URL}`,
-    "apiGatewayServer",
-    "debug"
-);
 export let socketIO: Server;
 
 export class GatewayServer {
@@ -131,7 +122,10 @@ export class GatewayServer {
         app.use("*", (req: Request, res: Response, next: NextFunction) => {
             const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
 
-            log.error(`${fullUrl} endpoint does not exist.`, "");
+            logger("server.ts - errorHandler()").error(
+                `${fullUrl} endpoint does not exist.`,
+                ""
+            );
 
             res.status(StatusCodes.NOT_FOUND).json({
                 message: "The endpoint called does not exist."
@@ -147,14 +141,15 @@ export class GatewayServer {
                 next: NextFunction
             ) => {
                 if (error instanceof CustomError) {
-                    log.error(`GatewayService ${error.comingFrom}:`, error);
+                    logger("server.ts - errorHandler()").error(
+                        `GatewayService ${error.comingFrom}:`,
+                        error
+                    );
                     res.status(error.statusCode).json({
                         message: error.message
                     });
                 } else if (isAxiosError(error)) {
-                    // console.log(error);
-                    log.log(
-                        "error",
+                    logger("server.ts - errorHandler()").error(
                         `GatewayService Axios Error - ${error?.response?.data?.comingFrom}:`,
                         error.message
                     );
@@ -177,7 +172,10 @@ export class GatewayServer {
             this.startHttpServer(httpServer);
             this.socketIOConnections(io);
         } catch (error) {
-            log.error("GatewayService startServer() method error:", error);
+            logger("server.ts - startServer()").error(
+                "GatewayService startServer() method error:",
+                error
+            );
         }
     }
 
@@ -188,27 +186,35 @@ export class GatewayServer {
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
             }
         });
-        const pubClient = redisConnection.client;
+        const pubClient = createClient({ url: `${REDIS_HOST}` });
         const subClient = pubClient.duplicate();
 
         await Promise.all([pubClient.connect(), subClient.connect()]);
         io.adapter(createAdapter(pubClient, subClient));
 
+        logger("server.ts - createSocketIO()").info(
+            "GatewayService SocketIO and Redis Pub-Sub Adapter is established."
+        );
         socketIO = io;
         return io;
     }
 
     private async startHttpServer(httpServer: http.Server): Promise<void> {
         try {
-            log.info(
-                `Gateway server has started with process id ${process.pid}. Date ${new Date()}`
+            logger("server.ts - startHttpServer()").info(
+                `GatewayService has started with pid ${process.pid}`
             );
 
             httpServer.listen(Number(PORT), () => {
-                log.info(`Gateway server running on port ${PORT}`);
+                logger("server.ts - startHttpServer()").info(
+                    `GatewayService running on port ${PORT}`
+                );
             });
         } catch (error) {
-            log.error("GatewayService startServer() method error:", error);
+            logger("server.ts - startHttpServer()").error(
+                "GatewayService startServer() method error:",
+                error
+            );
         }
     }
 

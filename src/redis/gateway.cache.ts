@@ -1,13 +1,6 @@
-import { winstonLogger } from "@Akihira77/jobber-shared";
-import { ELASTIC_SEARCH_URL } from "@gateway/config";
-import { Logger } from "winston";
-import { RedisClient, redisConnection } from "./redis.conection";
+import { logger } from "@gateway/config";
 
-const log: Logger = winstonLogger(
-    `${ELASTIC_SEARCH_URL}`,
-    "gatewayCache",
-    "debug"
-);
+import { RedisClient, redisConnection } from "./redis.conection";
 
 export class GatewayCache {
     client: RedisClient;
@@ -31,8 +24,8 @@ export class GatewayCache {
 
             await this.client.SET(key, value);
         } catch (error) {
-            log.error(
-                "GatewayService GatewayCache saveUserSelectedCategory() method error:",
+            logger("redis/gateway.cache.ts - saveUserSelectedCategory()").error(
+                "GatewayService Redis Cache saveUserSelectedCategory() method error:",
                 error
             );
         }
@@ -48,15 +41,17 @@ export class GatewayCache {
             const index: number | null = await this.client.LPOS(key, value);
             if (index === null) {
                 await this.client.LPUSH(key, value);
-                log.info(`User ${value} added to Gateway Redis Cache`);
+                logger(
+                    "redis/gateway.cache.ts - saveLoggedInUserToCache()"
+                ).info(`User ${value} added to Gateway Redis Cache`);
             }
 
             const result: string[] = await this.client.LRANGE(key, 0, -1);
 
             return result;
         } catch (error) {
-            log.error(
-                "GatewayService GatewayCache saveLoggedInUserToCache() method error:",
+            logger("redis/gateway.cache.ts - saveLoggedInUserToCache()").error(
+                "GatewayService Redis Cache saveLoggedInUserToCache() method error:",
                 error
             );
             return [];
@@ -71,8 +66,10 @@ export class GatewayCache {
 
             return result;
         } catch (error) {
-            log.error(
-                "GatewayService GatewayCache getLoggedInUsersFromCache() method error:",
+            logger(
+                "redis/gateway.cache.ts - getLoggedInUsersFromCache()"
+            ).error(
+                "GatewayService Redis Cache getLoggedInUsersFromCache() method error:",
                 error
             );
             return [];
@@ -88,14 +85,18 @@ export class GatewayCache {
 
             await this.client.LREM(key, 1, value);
 
-            log.info(`User ${value} remove from Gateway Redis Cache`);
+            logger(
+                "redis/gateway.cache.ts - removeLoggedInUserFromCache()"
+            ).info(`User ${value} remove from Gateway Redis Cache`);
 
             const result: string[] = await this.client.LRANGE(key, 0, -1);
 
             return result;
         } catch (error) {
-            log.error(
-                "GatewayService GatewayCache removeLoggedInUserFromCache() method error:",
+            logger(
+                "redis/gateway.cache.ts - removeLoggedInUserFromCache()"
+            ).error(
+                "GatewayService Redis Cache removeLoggedInUserFromCache() method error:",
                 error
             );
             return [];

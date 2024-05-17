@@ -35,7 +35,7 @@ class ReviewService {
 
     async addReview(data: IReviewDocument): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosReviewInstance.post(
-            `/`,
+            "/",
             data
         );
 

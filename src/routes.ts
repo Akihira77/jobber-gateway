@@ -9,6 +9,7 @@ import { gigRoutes } from "@gateway/routes/gig.route";
 import { messageRoutes } from "@gateway/routes/chat.route";
 import { orderRoutes } from "@gateway/routes/order.route";
 import { reviewRoutes } from "@gateway/routes/review.route";
+
 import { userRoutes } from "./routes/user.route";
 
 const BASE_PATH = "/api/gateway/v1";

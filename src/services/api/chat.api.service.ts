@@ -66,7 +66,7 @@ class ChatService {
 
     async markMessageAsRead(messageId: string): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosChatInstance.put(
-            `/mark-as-read`,
+            "/mark-as-read",
             { messageId }
         );
 
@@ -79,7 +79,7 @@ class ChatService {
         receiverUsername: string
     ): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosChatInstance.put(
-            `/mark-multiple-as-read`,
+            "/mark-multiple-as-read",
             { senderUsername, receiverUsername, messageId }
         );
 
@@ -87,7 +87,7 @@ class ChatService {
     }
 
     async updateOffer(messageId: string, type: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosChatInstance.put(`/offer`, {
+        const response: AxiosResponse = await axiosChatInstance.put("/offer", {
             type,
             messageId
         });

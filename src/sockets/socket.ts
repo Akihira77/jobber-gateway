@@ -1,24 +1,13 @@
 import {
     IMessageDocument,
     IOrderDocument,
-    IOrderNotifcation,
-    winstonLogger
+    IOrderNotifcation
 } from "@Akihira77/jobber-shared";
-import {
-    ELASTIC_SEARCH_URL,
-    MESSAGE_BASE_URL,
-    ORDER_BASE_URL
-} from "@gateway/config";
+import { logger, MESSAGE_BASE_URL, ORDER_BASE_URL } from "@gateway/config";
 import { GatewayCache } from "@gateway/redis/gateway.cache";
 import { Server, Socket } from "socket.io";
 import { io, Socket as SocketClient } from "socket.io-client";
-import { Logger } from "winston";
 
-const log: Logger = winstonLogger(
-    `${ELASTIC_SEARCH_URL}`,
-    `gatewaySocket`,
-    "debug"
-);
 let chatSocketClient: SocketClient;
 let orderSocketClient: SocketClient;
 
@@ -40,17 +29,17 @@ export class SocketIOAppHandler {
             socket.on("getLoggedInUsers", async () => {
                 const response =
                     await this.gatewayCache.getLoggedInUsersFromCache(
-                        "loggedInUsers"
+                        "loggergedInUsers"
                     );
 
                 // send to Frontend
                 this.io.emit("online", response);
             });
 
-            socket.on("loggedInUsers", async (username: string) => {
+            socket.on("loggergedInUsers", async (username: string) => {
                 const response =
                     await this.gatewayCache.saveLoggedInUserToCache(
-                        "loggedInUsers",
+                        "loggergedInUsers",
                         username
                     );
 
@@ -61,7 +50,7 @@ export class SocketIOAppHandler {
             socket.on("removeLoggedInUsers", async (username: string) => {
                 const response =
                     await this.gatewayCache.removeLoggedInUserFromCache(
-                        "loggedInUsers",
+                        "loggergedInUsers",
                         username
                     );
 
@@ -89,22 +78,31 @@ export class SocketIOAppHandler {
         });
 
         chatSocketClient.on("connect", () => {
-            log.info("ChatService socket connected");
+            logger("sockets/socket.ts - chatSocketServerIOConnection()").info(
+                "Socket connection to ChatService is successfully established"
+            );
         });
 
         chatSocketClient.on(
             "disconnect",
             (reason: SocketClient.DisconnectReason) => {
-                log.error("Chat Socket disconnect reason:", reason);
+                logger(
+                    "sockets/socket.ts - chatSocketServerIOConnection()"
+                ).error("Chat Socket disconnect reason:", reason);
 
                 chatSocketClient.connect();
             }
         );
 
         chatSocketClient.on("connect_error", (error: Error) => {
-            log.error("Chat Socket connection error:", error);
+            logger("sockets/socket.ts - chatSocketServerIOConnection()").error(
+                "Chat Socket connection error:",
+                error
+            );
 
-            chatSocketClient.connect();
+            while (!chatSocketClient.connect().active) {
+                chatSocketClient.connect();
+            }
         });
 
         // Custom Events
@@ -125,20 +123,27 @@ export class SocketIOAppHandler {
         });
 
         orderSocketClient.on("connect", () => {
-            log.info("OrderService socket connected");
+            logger("sockets/socket.ts - orderSocketServerIOConnection()").info(
+                "Socket connection to OrderService is successfully established"
+            );
         });
 
         orderSocketClient.on(
             "disconnect",
             (reason: SocketClient.DisconnectReason) => {
-                log.error("Order Socket disconnect reason:", reason);
+                logger(
+                    "sockets/socket.ts - orderSocketServerIOConnection()"
+                ).error("Order Socket disconnect reason:", reason);
 
                 orderSocketClient.connect();
             }
         );
 
         orderSocketClient.on("connect_error", (error: Error) => {
-            log.error("Order Socket connection error:", error);
+            logger("sockets/socket.ts - orderSocketServerIOConnection()").error(
+                "Order Socket connection error:",
+                error
+            );
 
             orderSocketClient.connect();
         });

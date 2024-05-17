@@ -1,13 +1,5 @@
 import { createClient } from "redis";
-import { winstonLogger } from "@Akihira77/jobber-shared";
-import { ELASTIC_SEARCH_URL, REDIS_HOST } from "@gateway/config";
-import { Logger } from "winston";
-
-const log: Logger = winstonLogger(
-    `${ELASTIC_SEARCH_URL}`,
-    "gatewayRedisConnection",
-    "debug"
-);
+import { logger, REDIS_HOST } from "@gateway/config";
 
 export type RedisClient = ReturnType<typeof createClient>;
 
@@ -21,18 +13,21 @@ class RedisConnection {
     async redisConnect(): Promise<void> {
         try {
             await this.client.connect();
-            log.info(
-                `GatewayService Redis Connection ${await this.client.ping()}`
+            logger("redis/redis.connection.ts - redisConnect()").info(
+                `GatewayService Redis Connected: ${this.client.isReady}`
             );
             this.catchError();
         } catch (error) {
-            log.error("GatewayService redisConnect() method error:", error);
+            logger("redis/redis.connection.ts - redisConnect()").error(
+                "GatewayService redisConnect() method error:",
+                error
+            );
         }
     }
 
     private catchError(): void {
         this.client.on("error", (error: unknown) => {
-            log.error(error);
+            logger("redis/redis.connection.ts - catchError()").error(error);
         });
     }
 }
