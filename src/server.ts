@@ -39,6 +39,7 @@ import { axiosChatInstance } from "@gateway/services/api/chat.api.service";
 import { axiosOrderInstance } from "@gateway/services/api/order.api.service";
 import { axiosReviewInstance } from "@gateway/services/api/review.api.service";
 import { createClient } from "redis";
+import morgan from "morgan";
 
 const DEFAULT_ERROR_CODE = 500;
 export let socketIO: Server;
@@ -108,6 +109,7 @@ export class GatewayServer {
         app.use(compression());
         app.use(json({ limit: "200mb" }));
         app.use(urlencoded({ extended: true, limit: "200mb" }));
+        app.use(morgan("dev"))
     }
 
     private routesMiddleware(app: Application): void {
