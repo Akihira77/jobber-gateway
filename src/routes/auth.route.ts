@@ -1,14 +1,15 @@
 import { AuthController } from "@gateway/controllers/auth.controller";
+import { RedisClient } from "@gateway/redis/gateway.redis";
 import { authMiddleware } from "@gateway/services/auth-middleware";
 import express, { Router } from "express";
 
-class AuthRoutes {
+export class AuthRoutes {
     private router: Router;
     private controller: AuthController;
 
-    constructor() {
+    constructor(redis: RedisClient) {
         this.router = express.Router();
-        this.controller = new AuthController();
+        this.controller = new AuthController(redis);
     }
 
     public routes(): Router {
@@ -34,5 +35,3 @@ class AuthRoutes {
         return this.router;
     }
 }
-
-export const authRoutes = new AuthRoutes();
