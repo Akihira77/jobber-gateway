@@ -1,12 +1,13 @@
-import { ELASTIC_SEARCH_URL, logger } from "@gateway/config";
+import { ELASTIC_SEARCH_URL } from "@gateway/config";
 import { Client } from "@elastic/elasticsearch";
 import { ClusterHealthResponse } from "@elastic/elasticsearch/lib/api/types";
+import { Logger } from "winston";
 
-class ElasticSearch {
-    private elasticSearchClient: Client;
+export class ElasticSearchClient {
+    private client: Client;
 
-    constructor() {
-        this.elasticSearchClient = new Client({
+    constructor(private logger: (moduleName: string) => Logger) {
+        this.client = new Client({
             node: `${ELASTIC_SEARCH_URL}`
         });
     }
@@ -14,13 +15,13 @@ class ElasticSearch {
     public async checkConnection(): Promise<void> {
         let isConnected = false;
         while (!isConnected) {
-            logger("elasticsearch.ts - checkConnection()").info(
+            this.logger("elasticsearch.ts - checkConnection()").info(
                 "GatewayService Connecting to ElasticSearch"
             );
             try {
                 const health: ClusterHealthResponse =
-                    await this.elasticSearchClient.cluster.health({});
-                logger("elasticsearch.ts - checkConnection()").info(
+                    await this.client.cluster.health({});
+                this.logger("elasticsearch.ts - checkConnection()").info(
                     `GatewayService ElasticSearch health status - ${health.status}`
                 );
 
@@ -28,10 +29,10 @@ class ElasticSearch {
                     isConnected = true;
                 }
             } catch (error) {
-                logger("elasticsearch.ts - checkConnection()").error(
+                this.logger("elasticsearch.ts - checkConnection()").error(
                     "Connection to ElasticSearch failed, Retrying..."
                 );
-                logger("elasticsearch.ts - checkConnection()").error(
+                this.logger("elasticsearch.ts - checkConnection()").error(
                     "GatewayService checkConnection() method error:",
                     error
                 );
@@ -39,5 +40,3 @@ class ElasticSearch {
         }
     }
 }
-
-export const elasticSearch = new ElasticSearch();

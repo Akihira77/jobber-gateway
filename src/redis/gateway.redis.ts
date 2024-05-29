@@ -1,12 +1,27 @@
-import { logger } from "@gateway/config";
+import { createClient, RedisClientType } from "redis";
+import { REDIS_HOST } from "@gateway/config";
+import { Logger } from "winston";
 
-import { RedisClient, redisConnection } from "./redis.conection";
+export class RedisClient {
+    private client: RedisClientType;
 
-export class GatewayCache {
-    client: RedisClient;
+    constructor(private logger: (moduleName: string) => Logger) {
+        this.client = createClient({ url: `${REDIS_HOST}` });
+    }
 
-    constructor() {
-        this.client = redisConnection.client;
+    async redisConnect(): Promise<void> {
+        try {
+            await this.client.connect();
+            this.logger("redis/redis.connection.ts - redisConnect()").info(
+                `GatewayService Redis Connected: ${this.client.isReady}`
+            );
+            this.catchError();
+        } catch (error) {
+            this.logger("redis/redis.connection.ts - redisConnect()").error(
+                "GatewayService redisConnect() method error:",
+                error
+            );
+        }
     }
 
     private async reconnectingClient(): Promise<void> {
@@ -24,7 +39,9 @@ export class GatewayCache {
 
             await this.client.SET(key, value);
         } catch (error) {
-            logger("redis/gateway.cache.ts - saveUserSelectedCategory()").error(
+            this.logger(
+                "redis/gateway.cache.ts - saveUserSelectedCategory()"
+            ).error(
                 "GatewayService Redis Cache saveUserSelectedCategory() method error:",
                 error
             );
@@ -41,7 +58,7 @@ export class GatewayCache {
             const index: number | null = await this.client.LPOS(key, value);
             if (index === null) {
                 await this.client.LPUSH(key, value);
-                logger(
+                this.logger(
                     "redis/gateway.cache.ts - saveLoggedInUserToCache()"
                 ).info(`User ${value} added to Gateway Redis Cache`);
             }
@@ -50,7 +67,9 @@ export class GatewayCache {
 
             return result;
         } catch (error) {
-            logger("redis/gateway.cache.ts - saveLoggedInUserToCache()").error(
+            this.logger(
+                "redis/gateway.cache.ts - saveLoggedInUserToCache()"
+            ).error(
                 "GatewayService Redis Cache saveLoggedInUserToCache() method error:",
                 error
             );
@@ -66,7 +85,7 @@ export class GatewayCache {
 
             return result;
         } catch (error) {
-            logger(
+            this.logger(
                 "redis/gateway.cache.ts - getLoggedInUsersFromCache()"
             ).error(
                 "GatewayService Redis Cache getLoggedInUsersFromCache() method error:",
@@ -85,7 +104,7 @@ export class GatewayCache {
 
             await this.client.LREM(key, 1, value);
 
-            logger(
+            this.logger(
                 "redis/gateway.cache.ts - removeLoggedInUserFromCache()"
             ).info(`User ${value} remove from Gateway Redis Cache`);
 
@@ -93,7 +112,7 @@ export class GatewayCache {
 
             return result;
         } catch (error) {
-            logger(
+            this.logger(
                 "redis/gateway.cache.ts - removeLoggedInUserFromCache()"
             ).error(
                 "GatewayService Redis Cache removeLoggedInUserFromCache() method error:",
@@ -101,5 +120,13 @@ export class GatewayCache {
             );
             return [];
         }
+    }
+
+    private catchError(): void {
+        this.client.on("error", (error: unknown) => {
+            this.logger("redis/redis.connection.ts - catchError()").error(
+                error
+            );
+        });
     }
 }

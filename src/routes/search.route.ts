@@ -1,24 +1,23 @@
 import { AuthController } from "@gateway/controllers/auth.controller";
+import { RedisClient } from "@gateway/redis/gateway.redis";
 import express, { Router } from "express";
 
-class SearchRoutes {
+export class SearchRoutes {
     private router: Router;
-    private contoller: AuthController;
+    private controller: AuthController;
 
-    constructor() {
+    constructor(redis: RedisClient) {
         this.router = express.Router();
-        this.contoller = new AuthController();
+        this.controller = new AuthController(redis);
     }
 
     public routes(): Router {
         this.router.get(
             "/auth/search/gig/:from/:size/:type",
-            this.contoller.getGigsQuerySearch
+            this.controller.getGigsQuerySearch
         );
-        this.router.get("/auth/search/gig/:id", this.contoller.getGigById);
+        this.router.get("/auth/search/gig/:id", this.controller.getGigById);
 
         return this.router;
     }
 }
-
-export const searchRoutes = new SearchRoutes();

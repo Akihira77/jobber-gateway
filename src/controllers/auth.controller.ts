@@ -1,15 +1,11 @@
-import { GatewayCache } from "@gateway/redis/gateway.cache";
+import { RedisClient } from "@gateway/redis/gateway.redis";
 import { socketIO } from "@gateway/server";
 import { authService } from "@gateway/services/api/auth.api.service";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export class AuthController {
-    private gatewayCache: GatewayCache;
-
-    constructor() {
-        this.gatewayCache = new GatewayCache();
-    }
+    constructor(private redis: RedisClient) {}
 
     public async getCurrentUser(_req: Request, res: Response): Promise<void> {
         const response = await authService.getCurrentUser();
@@ -36,7 +32,7 @@ export class AuthController {
 
     public async getLoggedInUsers(_req: Request, res: Response): Promise<void> {
         const response =
-            await this.gatewayCache.getLoggedInUsersFromCache("loggedInUsers");
+            await this.redis.getLoggedInUsersFromCache("loggedInUsers");
         socketIO.emit("online", response);
 
         res.status(StatusCodes.OK).json({
@@ -48,7 +44,7 @@ export class AuthController {
         req: Request,
         res: Response
     ): Promise<void> {
-        const response = await this.gatewayCache.removeLoggedInUserFromCache(
+        const response = await this.redis.removeLoggedInUserFromCache(
             "loggedInUsers",
             req.params.username
         );

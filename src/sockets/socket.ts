@@ -3,21 +3,24 @@ import {
     IOrderDocument,
     IOrderNotifcation
 } from "@Akihira77/jobber-shared";
-import { logger, MESSAGE_BASE_URL, ORDER_BASE_URL } from "@gateway/config";
-import { GatewayCache } from "@gateway/redis/gateway.cache";
+import { MESSAGE_BASE_URL, ORDER_BASE_URL } from "@gateway/config";
+import { RedisClient } from "@gateway/redis/gateway.redis";
 import { Server, Socket } from "socket.io";
 import { io, Socket as SocketClient } from "socket.io-client";
+import { Logger } from "winston";
 
 let chatSocketClient: SocketClient;
 let orderSocketClient: SocketClient;
 
 export class SocketIOAppHandler {
     private io: Server;
-    private gatewayCache: GatewayCache;
 
-    constructor(io: Server) {
+    constructor(
+        io: Server,
+        private redis: RedisClient,
+        private logger: (moduleName: string) => Logger
+    ) {
         this.io = io;
-        this.gatewayCache = new GatewayCache();
     }
 
     // Listening event from Front End
@@ -28,7 +31,7 @@ export class SocketIOAppHandler {
         this.io.on("connection", async (socket: Socket) => {
             socket.on("getLoggedInUsers", async () => {
                 const response =
-                    await this.gatewayCache.getLoggedInUsersFromCache(
+                    await this.redis.getLoggedInUsersFromCache(
                         "loggergedInUsers"
                     );
 
@@ -37,22 +40,20 @@ export class SocketIOAppHandler {
             });
 
             socket.on("loggergedInUsers", async (username: string) => {
-                const response =
-                    await this.gatewayCache.saveLoggedInUserToCache(
-                        "loggergedInUsers",
-                        username
-                    );
+                const response = await this.redis.saveLoggedInUserToCache(
+                    "loggergedInUsers",
+                    username
+                );
 
                 // send to Frontend
                 this.io.emit("online", response);
             });
 
             socket.on("removeLoggedInUsers", async (username: string) => {
-                const response =
-                    await this.gatewayCache.removeLoggedInUserFromCache(
-                        "loggergedInUsers",
-                        username
-                    );
+                const response = await this.redis.removeLoggedInUserFromCache(
+                    "loggergedInUsers",
+                    username
+                );
 
                 // send to Frontend
                 this.io.emit("online", response);
@@ -61,7 +62,7 @@ export class SocketIOAppHandler {
             socket.on(
                 "category",
                 async (category: string, username: string) => {
-                    await this.gatewayCache.saveUserSelectedCategory(
+                    await this.redis.saveUserSelectedCategory(
                         `selectedCategories:${username}`,
                         category
                     );
@@ -78,7 +79,9 @@ export class SocketIOAppHandler {
         });
 
         chatSocketClient.on("connect", () => {
-            logger("sockets/socket.ts - chatSocketServerIOConnection()").info(
+            this.logger(
+                "sockets/socket.ts - chatSocketServerIOConnection()"
+            ).info(
                 "Socket connection to ChatService is successfully established"
             );
         });
@@ -86,7 +89,7 @@ export class SocketIOAppHandler {
         chatSocketClient.on(
             "disconnect",
             (reason: SocketClient.DisconnectReason) => {
-                logger(
+                this.logger(
                     "sockets/socket.ts - chatSocketServerIOConnection()"
                 ).error("Chat Socket disconnect reason:", reason);
 
@@ -95,10 +98,9 @@ export class SocketIOAppHandler {
         );
 
         chatSocketClient.on("connect_error", (error: Error) => {
-            logger("sockets/socket.ts - chatSocketServerIOConnection()").error(
-                "Chat Socket connection error:",
-                error
-            );
+            this.logger(
+                "sockets/socket.ts - chatSocketServerIOConnection()"
+            ).error("Chat Socket connection error:", error);
 
             while (!chatSocketClient.connect().active) {
                 chatSocketClient.connect();
@@ -123,7 +125,9 @@ export class SocketIOAppHandler {
         });
 
         orderSocketClient.on("connect", () => {
-            logger("sockets/socket.ts - orderSocketServerIOConnection()").info(
+            this.logger(
+                "sockets/socket.ts - orderSocketServerIOConnection()"
+            ).info(
                 "Socket connection to OrderService is successfully established"
             );
         });
@@ -131,7 +135,7 @@ export class SocketIOAppHandler {
         orderSocketClient.on(
             "disconnect",
             (reason: SocketClient.DisconnectReason) => {
-                logger(
+                this.logger(
                     "sockets/socket.ts - orderSocketServerIOConnection()"
                 ).error("Order Socket disconnect reason:", reason);
 
@@ -140,10 +144,9 @@ export class SocketIOAppHandler {
         );
 
         orderSocketClient.on("connect_error", (error: Error) => {
-            logger("sockets/socket.ts - orderSocketServerIOConnection()").error(
-                "Order Socket connection error:",
-                error
-            );
+            this.logger(
+                "sockets/socket.ts - orderSocketServerIOConnection()"
+            ).error("Order Socket connection error:", error);
 
             orderSocketClient.connect();
         });

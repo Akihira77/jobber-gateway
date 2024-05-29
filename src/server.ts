@@ -3,7 +3,6 @@ import "express-async-errors";
 
 import {
     CLIENT_URL,
-    logger,
     NODE_ENV,
     PORT,
     REDIS_HOST,
@@ -25,7 +24,7 @@ import helmet from "helmet";
 import cors from "cors";
 import compression from "compression";
 import { StatusCodes } from "http-status-codes";
-import { elasticSearch } from "@gateway/elasticsearch";
+import { ElasticSearchClient } from "@gateway/elasticsearch";
 import { appRoutes } from "@gateway/routes";
 import { axiosAuthInstance } from "@gateway/services/api/auth.api.service";
 import { isAxiosError } from "axios";
@@ -39,7 +38,9 @@ import { axiosChatInstance } from "@gateway/services/api/chat.api.service";
 import { axiosOrderInstance } from "@gateway/services/api/order.api.service";
 import { axiosReviewInstance } from "@gateway/services/api/review.api.service";
 import { createClient } from "redis";
-import morgan from "morgan";
+import { Logger } from "winston";
+
+import { RedisClient } from "./redis/gateway.redis";
 
 const DEFAULT_ERROR_CODE = 500;
 export let socketIO: Server;
@@ -51,13 +52,17 @@ export class GatewayServer {
         this.app = app;
     }
 
-    public start(): void {
+    public start(
+        elastic: ElasticSearchClient,
+        redis: RedisClient,
+        logger: (moduleName: string) => Logger
+    ): void {
+        this.startElasticSearch(elastic);
         this.securityMiddleware(this.app);
         this.standardMiddleware(this.app);
-        this.routesMiddleware(this.app);
-        this.startElasticSearch();
-        this.errorHandler(this.app);
-        this.startServer(this.app);
+        this.routesMiddleware(this.app, redis);
+        this.errorHandler(this.app, logger);
+        this.startServer(this.app, redis, logger);
     }
 
     private securityMiddleware(app: Application): void {
@@ -109,18 +114,20 @@ export class GatewayServer {
         app.use(compression());
         app.use(json({ limit: "200mb" }));
         app.use(urlencoded({ extended: true, limit: "200mb" }));
-        app.use(morgan("dev"))
     }
 
-    private routesMiddleware(app: Application): void {
-        appRoutes(app);
+    private routesMiddleware(app: Application, redis: RedisClient): void {
+        appRoutes(app, redis);
     }
 
-    private startElasticSearch(): void {
-        elasticSearch.checkConnection();
+    private startElasticSearch(elastic: ElasticSearchClient): void {
+        elastic.checkConnection();
     }
 
-    private errorHandler(app: Application): void {
+    private errorHandler(
+        app: Application,
+        logger: (moduleName: string) => Logger
+    ): void {
         app.use("*", (req: Request, res: Response, next: NextFunction) => {
             const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
 
@@ -167,12 +174,16 @@ export class GatewayServer {
         );
     }
 
-    private async startServer(app: Application): Promise<void> {
+    private async startServer(
+        app: Application,
+        redis: RedisClient,
+        logger: (moduleName: string) => Logger
+    ): Promise<void> {
         try {
             const httpServer: http.Server = new http.Server(app);
-            const io: Server = await this.createSocketIO(httpServer);
-            this.startHttpServer(httpServer);
-            this.socketIOConnections(io);
+            const io: Server = await this.createSocketIO(httpServer, logger);
+            this.startHttpServer(httpServer, logger);
+            this.socketIOConnections(io, redis, logger);
         } catch (error) {
             logger("server.ts - startServer()").error(
                 "GatewayService startServer() method error:",
@@ -181,7 +192,10 @@ export class GatewayServer {
         }
     }
 
-    private async createSocketIO(httpServer: http.Server): Promise<Server> {
+    private async createSocketIO(
+        httpServer: http.Server,
+        logger: (moduleName: string) => Logger
+    ): Promise<Server> {
         const io: Server = new Server(httpServer, {
             cors: {
                 origin: [`${CLIENT_URL}`],
@@ -201,7 +215,10 @@ export class GatewayServer {
         return io;
     }
 
-    private async startHttpServer(httpServer: http.Server): Promise<void> {
+    private async startHttpServer(
+        httpServer: http.Server,
+        logger: (moduleName: string) => Logger
+    ): Promise<void> {
         try {
             logger("server.ts - startHttpServer()").info(
                 `GatewayService has started with pid ${process.pid}`
@@ -220,8 +237,12 @@ export class GatewayServer {
         }
     }
 
-    private socketIOConnections(io: Server): void {
-        const socketIoApp = new SocketIOAppHandler(io);
+    private socketIOConnections(
+        io: Server,
+        redis: RedisClient,
+        logger: (moduleName: string) => Logger
+    ): void {
+        const socketIoApp = new SocketIOAppHandler(io, redis, logger);
 
         socketIoApp.listen();
     }

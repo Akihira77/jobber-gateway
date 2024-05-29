@@ -1,15 +1,33 @@
 import express, { Express } from "express";
 import { GatewayServer } from "@gateway/server";
-import { redisConnection } from "@gateway/redis/redis.conection";
+import { Logger } from "winston";
+import { winstonLogger } from "@Akihira77/jobber-shared";
+
+import { ELASTIC_SEARCH_URL } from "./config";
+import { ElasticSearchClient } from "./elasticsearch";
+import { RedisClient } from "./redis/gateway.redis";
 
 class Application {
-    public initialize(): void {
+    private logger: (moduleName: string) => Logger;
+    private elastic: ElasticSearchClient;
+    private redis: RedisClient;
+    constructor() {
+        this.logger = (moduleName?: string) =>
+            winstonLogger(
+                `${ELASTIC_SEARCH_URL}`,
+                moduleName ?? "Gateway Service",
+                "debug"
+            );
+        this.elastic = new ElasticSearchClient(this.logger);
+        this.redis = new RedisClient(this.logger);
+    }
+    public main(): void {
         const app: Express = express();
         const server: GatewayServer = new GatewayServer(app);
-        server.start();
-        redisConnection.redisConnect();
+        server.start(this.elastic, this.logger);
+        this.redis.redisConnect();
     }
 }
 
 const application = new Application();
-application.initialize();
+application.main();
