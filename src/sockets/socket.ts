@@ -32,16 +32,16 @@ export class SocketIOAppHandler {
             socket.on("getLoggedInUsers", async () => {
                 const response =
                     await this.redis.getLoggedInUsersFromCache(
-                        "loggergedInUsers"
+                        "loggerInUsers"
                     );
 
                 // send to Frontend
                 this.io.emit("online", response);
             });
 
-            socket.on("loggergedInUsers", async (username: string) => {
+            socket.on("loggerInUsers", async (username: string) => {
                 const response = await this.redis.saveLoggedInUserToCache(
-                    "loggergedInUsers",
+                    "loggerInUsers",
                     username
                 );
 
@@ -51,7 +51,7 @@ export class SocketIOAppHandler {
 
             socket.on("removeLoggedInUsers", async (username: string) => {
                 const response = await this.redis.removeLoggedInUserFromCache(
-                    "loggergedInUsers",
+                    "loggerInUsers",
                     username
                 );
 
@@ -74,8 +74,10 @@ export class SocketIOAppHandler {
     // Listening event from another chat service
     private chatSocketServerIOConnection(): void {
         chatSocketClient = io(`${MESSAGE_BASE_URL}`, {
-            transports: ["websocket", "polling"],
-            secure: true
+            transports: ["polling", "websocket"],
+            secure: true,
+            withCredentials: true,
+            reconnection: false
         });
 
         chatSocketClient.on("connect", () => {
@@ -92,19 +94,17 @@ export class SocketIOAppHandler {
                 this.logger(
                     "sockets/socket.ts - chatSocketServerIOConnection()"
                 ).error("Chat Socket disconnect reason:", reason);
-
-                chatSocketClient.connect();
             }
         );
 
-        chatSocketClient.on("connect_error", (error: Error) => {
-            this.logger(
-                "sockets/socket.ts - chatSocketServerIOConnection()"
-            ).error("Chat Socket connection error:", error);
+        chatSocketClient.on("connect_error", (error: any) => {
+            // this.logger(
+            //     "sockets/socket.ts - chatSocketServerIOConnection()"
+            // ).error("Chat Socket connection error:", error);
 
-            while (!chatSocketClient.connect().active) {
-                chatSocketClient.connect();
-            }
+            console.log(error.name);
+            console.log(error.description);
+            console.log(error.context);
         });
 
         // Custom Events
@@ -120,8 +120,10 @@ export class SocketIOAppHandler {
     // Listening event from order service
     private orderSocketServerIOConnection(): void {
         orderSocketClient = io(`${ORDER_BASE_URL}`, {
-            transports: ["websocket", "polling"],
-            secure: true
+            transports: ["polling", "websocket"],
+            secure: true,
+            withCredentials: true,
+            reconnection: false,
         });
 
         orderSocketClient.on("connect", () => {
@@ -138,17 +140,13 @@ export class SocketIOAppHandler {
                 this.logger(
                     "sockets/socket.ts - orderSocketServerIOConnection()"
                 ).error("Order Socket disconnect reason:", reason);
-
-                orderSocketClient.connect();
             }
         );
 
-        orderSocketClient.on("connect_error", (error: Error) => {
-            this.logger(
-                "sockets/socket.ts - orderSocketServerIOConnection()"
-            ).error("Order Socket connection error:", error);
-
-            orderSocketClient.connect();
+        orderSocketClient.on("connect_error", (error: any) => {
+            console.log(error.name);
+            console.log(error.description);
+            console.log(error.context);
         });
 
         // Custom events

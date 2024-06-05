@@ -1,28 +1,11 @@
 import http from "http";
-import "express-async-errors";
 
 import {
     CLIENT_URL,
-    NODE_ENV,
     PORT,
-    REDIS_HOST,
-    SECRET_KEY_ONE,
-    SECRET_KEY_TWO
+    REDIS_HOST
 } from "@gateway/config";
-import { CustomError, IErrorResponse } from "@Akihira77/jobber-shared";
-import cookieSession from "cookie-session";
-import {
-    Application,
-    NextFunction,
-    Request,
-    Response,
-    json,
-    urlencoded
-} from "express";
-import hpp from "hpp";
-import helmet from "helmet";
-import cors from "cors";
-import compression from "compression";
+import { CustomError } from "@Akihira77/jobber-shared";
 import { StatusCodes } from "http-status-codes";
 import { ElasticSearchClient } from "@gateway/elasticsearch";
 import { appRoutes } from "@gateway/routes";
@@ -39,16 +22,30 @@ import { axiosOrderInstance } from "@gateway/services/api/order.api.service";
 import { axiosReviewInstance } from "@gateway/services/api/review.api.service";
 import { createClient } from "redis";
 import { Logger } from "winston";
+import { Context, Hono, Next } from "hono";
+import { cors } from "hono/cors";
+import { compress } from "hono/compress";
+import { timeout } from "hono/timeout";
+import { csrf } from "hono/csrf";
+import { secureHeaders } from "hono/secure-headers";
+import { bodyLimit } from "hono/body-limit";
+import { rateLimiter } from "hono-rate-limiter";
+import { HTTPException } from "hono/http-exception";
+import { getCookie } from "hono/cookie";
+import { StatusCode } from "hono/utils/http-status";
+import { ServerType } from "@hono/node-server/dist/types";
+import { serve } from "@hono/node-server";
 
 import { RedisClient } from "./redis/gateway.redis";
 
 const DEFAULT_ERROR_CODE = 500;
 export let socketIO: Server;
+const LIMIT_TIMEOUT = 2 * 1000 + 500; // 2s
 
 export class GatewayServer {
-    private app: Application;
+    private app: Hono;
 
-    constructor(app: Application) {
+    constructor(app: Hono) {
         this.app = app;
     }
 
@@ -65,58 +62,86 @@ export class GatewayServer {
         this.startServer(this.app, redis, logger);
     }
 
-    private securityMiddleware(app: Application): void {
-        app.set("trust proxy", 1);
+    private securityMiddleware(app: Hono): void {
         app.use(
-            cookieSession({
-                name: "session",
-                keys: [`${SECRET_KEY_ONE}`, `${SECRET_KEY_TWO}`],
-                maxAge: 7 * 24 * 36 * 10 * 1000, // 7 days,
-                secure: NODE_ENV !== "development", // updated with value from config,
-                ...(NODE_ENV !== "development" && {
-                    sameSite: "none"
-                })
+            timeout(LIMIT_TIMEOUT, () => {
+                return new HTTPException(StatusCodes.REQUEST_TIMEOUT, {
+                    message: `Request timeout after waiting ${LIMIT_TIMEOUT}ms. Please try again later.`
+                });
             })
         );
-        app.use(hpp());
-        app.use(helmet());
+        app.use(secureHeaders());
+        app.use(
+            csrf({
+                origin: [
+                    `${CLIENT_URL}`,
+                ]
+            })
+        );
         app.use(
             cors({
-                origin: [`${CLIENT_URL}`],
+                origin: [
+                    `${CLIENT_URL}`,
+                ],
                 credentials: true,
-                methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+                allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
             })
         );
-
-        app.use((req: Request, _res: Response, next: NextFunction) => {
-            if (req.session?.jwt) {
+        app.use(async (c: Context, next: Next) => {
+            const token = getCookie(c, "session");
+            if (token) {
                 axiosAuthInstance.defaults.headers["Authorization"] =
-                    `Bearer ${req.session?.jwt}`;
+                    `Bearer ${token}`;
                 axiosBuyerInstance.defaults.headers["Authorization"] =
-                    `Bearer ${req.session?.jwt}`;
+                    `Bearer ${token}`;
                 axiosSellerInstance.defaults.headers["Authorization"] =
-                    `Bearer ${req.session?.jwt}`;
+                    `Bearer ${token}`;
                 axiosGigInstance.defaults.headers["Authorization"] =
-                    `Bearer ${req.session?.jwt}`;
+                    `Bearer ${token}`;
                 axiosChatInstance.defaults.headers["Authorization"] =
-                    `Bearer ${req.session?.jwt}`;
+                    `Bearer ${token}`;
                 axiosOrderInstance.defaults.headers["Authorization"] =
-                    `Bearer ${req.session?.jwt}`;
+                    `Bearer ${token}`;
                 axiosReviewInstance.defaults.headers["Authorization"] =
-                    `Bearer ${req.session?.jwt}`;
+                    `Bearer ${token}`;
             }
 
-            next();
+            await next();
         });
     }
 
-    private standardMiddleware(app: Application): void {
-        app.use(compression());
-        app.use(json({ limit: "200mb" }));
-        app.use(urlencoded({ extended: true, limit: "200mb" }));
+    private standardMiddleware(app: Hono): void {
+        app.use(compress());
+        app.use(
+            bodyLimit({
+                maxSize: 2 * 100 * 1000 * 1024, //200mb
+                onError(c: Context) {
+                    return c.text(
+                        "Your request is too big",
+                        StatusCodes.REQUEST_HEADER_FIELDS_TOO_LARGE
+                    );
+                }
+            })
+        );
+
+        const generateRandomNumber = (length: number): number => {
+            return (
+                Math.floor(Math.random() * (9 * Math.pow(10, length - 1))) +
+                Math.pow(10, length - 1)
+            );
+        };
+
+        app.use(
+            rateLimiter({
+                windowMs: 1 * 60 * 1000, //60s
+                limit: 10,
+                standardHeaders: "draft-6",
+                keyGenerator: () => generateRandomNumber(12).toString()
+            })
+        );
     }
 
-    private routesMiddleware(app: Application, redis: RedisClient): void {
+    private routesMiddleware(app: Hono, redis: RedisClient): void {
         appRoutes(app, redis);
     }
 
@@ -125,64 +150,58 @@ export class GatewayServer {
     }
 
     private errorHandler(
-        app: Application,
+        app: Hono,
         logger: (moduleName: string) => Logger
     ): void {
-        app.use("*", (req: Request, res: Response, next: NextFunction) => {
-            const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
-
-            logger("server.ts - errorHandler()").error(
-                `${fullUrl} endpoint does not exist.`,
-                ""
-            );
-
-            res.status(StatusCodes.NOT_FOUND).json({
-                message: "The endpoint called does not exist."
-            });
-            next();
+        app.notFound((c) => {
+            return c.text("Route path is not found", StatusCodes.NOT_FOUND);
         });
 
-        app.use(
-            (
-                error: IErrorResponse,
-                _req: Request,
-                res: Response,
-                next: NextFunction
-            ) => {
-                if (error instanceof CustomError) {
-                    logger("server.ts - errorHandler()").error(
-                        `GatewayService ${error.comingFrom}:`,
-                        error
-                    );
-                    res.status(error.statusCode).json({
-                        message: error.message
-                    });
-                } else if (isAxiosError(error)) {
-                    logger("server.ts - errorHandler()").error(
-                        `GatewayService Axios Error - ${error?.response?.data?.comingFrom}:`,
-                        error.message
-                    );
-                    res.status(
-                        error?.response?.data?.statusCode ?? DEFAULT_ERROR_CODE
-                    ).json({
+        app.onError((err: Error, c: Context) => {
+            if (err instanceof CustomError) {
+                logger("server.ts - errorHandler()").error(
+                    `GatewayService ${err.comingFrom}:`,
+                    err
+                );
+                return c.json(
+                    err.serializeErrors(),
+                    (err.statusCode as StatusCode) ??
+                        StatusCodes.INTERNAL_SERVER_ERROR
+                );
+            } else if (err instanceof HTTPException) {
+                return err.getResponse();
+            } else if (isAxiosError(err)) {
+                logger("server.ts - errorHandler()").error(
+                    `GatewayService Axios Error - ${err?.response?.data?.comingFrom}:`,
+                    err.message
+                );
+                return c.json(
+                    {
                         message:
-                            error?.response?.data?.message ?? "Error occurred."
-                    });
-                }
-                next();
+                            err?.response?.data?.message ?? "Error occurred."
+                    },
+                    err?.response?.data?.statusCode ?? DEFAULT_ERROR_CODE
+                );
             }
-        );
+
+            return c.text(
+                "Unexpected error occured. Please try again",
+                StatusCodes.INTERNAL_SERVER_ERROR
+            );
+        });
     }
 
     private async startServer(
-        app: Application,
+        app: Hono,
         redis: RedisClient,
         logger: (moduleName: string) => Logger
     ): Promise<void> {
         try {
-            const httpServer: http.Server = new http.Server(app);
-            const io: Server = await this.createSocketIO(httpServer, logger);
-            this.startHttpServer(httpServer, logger);
+            const server = this.startHttpServer(app, logger);
+            const io: Server = await this.createSocketIO(
+                server as http.Server,
+                logger
+            );
             this.socketIOConnections(io, redis, logger);
         } catch (error) {
             logger("server.ts - startServer()").error(
@@ -215,25 +234,36 @@ export class GatewayServer {
         return io;
     }
 
-    private async startHttpServer(
-        httpServer: http.Server,
+    private startHttpServer(
+        hono: Hono,
         logger: (moduleName: string) => Logger
-    ): Promise<void> {
+    ): ServerType {
         try {
             logger("server.ts - startHttpServer()").info(
                 `GatewayService has started with pid ${process.pid}`
             );
 
-            httpServer.listen(Number(PORT), () => {
-                logger("server.ts - startHttpServer()").info(
-                    `GatewayService running on port ${PORT}`
-                );
-            });
+            const server = serve(
+                {
+                    fetch: hono.fetch,
+                    port: Number(PORT),
+                    createServer: http.createServer
+                },
+                (info) => {
+                    logger("server.ts - startHttpServer()").info(
+                        `GatewayService running on port ${info.port}`
+                    );
+                }
+            );
+
+            return server;
         } catch (error) {
             logger("server.ts - startHttpServer()").error(
                 "GatewayService startServer() method error:",
                 error
             );
+
+            process.exit(1);
         }
     }
 

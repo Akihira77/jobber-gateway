@@ -16,6 +16,7 @@ export class RedisClient {
                 `GatewayService Redis Connected: ${this.client.isReady}`
             );
             this.catchError();
+            this.closeConnection(this.client);
         } catch (error) {
             this.logger("redis/redis.connection.ts - redisConnect()").error(
                 "GatewayService redisConnect() method error:",
@@ -127,6 +128,12 @@ export class RedisClient {
             this.logger("redis/redis.connection.ts - catchError()").error(
                 error
             );
+        });
+    }
+
+    closeConnection(redis: RedisClientType): void {
+        process.once("exit", async () => {
+            await redis.quit();
         });
     }
 }

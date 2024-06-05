@@ -1,7 +1,8 @@
-import express, { Express } from "express";
 import { GatewayServer } from "@gateway/server";
 import { Logger } from "winston";
 import { winstonLogger } from "@Akihira77/jobber-shared";
+import { Hono } from "hono";
+
 import { ELASTIC_SEARCH_URL } from "./config";
 import { ElasticSearchClient } from "./elasticsearch";
 import { RedisClient } from "./redis/gateway.redis";
@@ -21,8 +22,8 @@ class Application {
         this.redis = new RedisClient(this.logger);
     }
     public main(): void {
-        const app: Express = express();
-        const server: GatewayServer = new GatewayServer(app);
+        const app = new Hono();
+        const server = new GatewayServer(app);
         this.redis.redisConnect();
         server.start(this.elastic, this.redis, this.logger);
     }

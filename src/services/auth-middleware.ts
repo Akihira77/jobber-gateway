@@ -4,12 +4,14 @@ import {
     NotAuthorizedError
 } from "@Akihira77/jobber-shared";
 import { JWT_TOKEN } from "@gateway/config";
-import { NextFunction, Request, Response } from "express";
+import { Context, Next } from "hono";
+import { getCookie } from "hono/cookie";
 import jwt from "jsonwebtoken";
 
 class AuthMiddleware {
-    public authOnly(req: Request, _res: Response, next: NextFunction): void {
-        if (!req.session?.jwt) {
+    public async authOnly(c: Context, next: Next): Promise<void> {
+        const token = getCookie(c, "session");
+        if (!token) {
             throw new NotAuthorizedError(
                 "Token is not available. Please login again",
                 "GatewayService verifyUser() method error"
@@ -17,15 +19,11 @@ class AuthMiddleware {
         }
 
         try {
-            const payload: IAuthPayload = jwt.verify(
-                req.session?.jwt,
-                `${JWT_TOKEN}`,
-                {
-                    algorithms: ["HS512"]
-                }
-            ) as IAuthPayload;
+            const payload: IAuthPayload = jwt.verify(token, `${JWT_TOKEN}`, {
+                algorithms: ["HS512"]
+            }) as IAuthPayload;
 
-            req.currentUser = payload;
+            c.set("currentUser", payload);
         } catch (error) {
             throw new NotAuthorizedError(
                 "Token is not correct. Please login again",
@@ -33,18 +31,18 @@ class AuthMiddleware {
             );
         }
 
-        next();
+        await next();
     }
 
-    public verifyAuth(req: Request, _res: Response, next: NextFunction): void {
-        if (!req.currentUser) {
+    public async verifyAuth(c: Context, next: Next): Promise<void> {
+        if (!c.get("currentUser")) {
             throw new BadRequestError(
                 "Authentication is required to access this route",
                 "GatewayService checkAuthentication() method error"
             );
         }
 
-        next();
+        await next();
     }
 }
 

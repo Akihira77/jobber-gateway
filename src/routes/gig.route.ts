@@ -1,84 +1,101 @@
-import { GigController } from "@gateway/controllers/gig.controller";
+import { GigHandler } from "@gateway/handler/gig.handler";
+import { BASE_PATH } from "@gateway/routes";
 import { authMiddleware } from "@gateway/services/auth-middleware";
-import express, { Router } from "express";
+import { Context, Hono } from "hono";
+import { StatusCodes } from "http-status-codes";
 
-class GigRoutes {
-    private router: Router;
-    private controller: GigController;
+export function gigRoute(
+    api: Hono<Record<string, never>, Record<string, never>, typeof BASE_PATH>
+) {
+    const gigHndlr = new GigHandler();
+    api.use("/gig", authMiddleware.verifyAuth);
 
-    constructor() {
-        this.router = express.Router();
-        this.controller = new GigController();
-    }
+    api.get("/gig/:gigId", async (c: Context) => {
+        const gigId = c.req.param("gigId");
+        const { message, gig } = await gigHndlr.getGigById(gigId);
 
-    public routes(): Router {
-        this.router.get(
-            "/gig/:gigId",
-            authMiddleware.verifyAuth,
-            this.controller.getGigById
-        );
-        this.router.get(
-            "/gig/seller/:sellerId",
-            authMiddleware.verifyAuth,
-            this.controller.getSellerActiveGigs
-        );
-        this.router.get(
-            "/gig/seller/inactive/:sellerId",
-            authMiddleware.verifyAuth,
-            this.controller.getSellerInactiveGigs
-        );
-        this.router.get(
-            "/gig/search/:from/:size/:type",
-            authMiddleware.verifyAuth,
-            this.controller.getGigsQuerySearch
-        );
-        this.router.get(
-            "/gig/category/:username",
-            authMiddleware.verifyAuth,
-            this.controller.getGigsByCategory
-        );
-        this.router.get(
-            "/gig/top/:username",
-            authMiddleware.verifyAuth,
-            this.controller.getTopRatedGigsByCategory
-        );
-        this.router.get(
-            "/gig/similar/:gigId",
-            authMiddleware.verifyAuth,
-            this.controller.getGigsMoreLikeThis
+        return c.json({ message, gig }, StatusCodes.OK);
+    });
+    api.get("/gig/seller/:sellerId", async (c: Context) => {
+        const sellerId = c.req.param("sellerId");
+        const { message, gigs } = await gigHndlr.getSellerActiveGigs(sellerId);
+
+        return c.json({ message, gigs }, StatusCodes.OK);
+    });
+    api.get("/gig/seller/inactive/:sellerId", async (c: Context) => {
+        const sellerId = c.req.param("sellerId");
+        const { message, gigs } =
+            await gigHndlr.getSellerInactiveGigs(sellerId);
+
+        return c.json({ message, gigs }, StatusCodes.OK);
+    });
+    api.get("/gig/search/:from/:size/:type", async (c: Context) => {
+        const { from, size, type } = c.req.param();
+        const { query, delivery_time, min, max } = c.req.query();
+        const { message, total, gigs } = await gigHndlr.getGigsQuerySearch(
+            { from, size: parseInt(size), type },
+            { query, delivery_time, min, max }
         );
 
-        this.router.post(
-            "/gig/create",
-            authMiddleware.verifyAuth,
-            this.controller.createGig
+        return c.json({ message, total, gigs }, StatusCodes.OK);
+    });
+    api.get("/gig/category/:username", async (c: Context) => {
+        const username = c.req.param("username");
+        const { message, gigs } = await gigHndlr.getGigsByCategory(username);
+
+        return c.json({ message, gigs }, StatusCodes.OK);
+    });
+    api.get("/gig/top/:username", async (c: Context) => {
+        const username = c.req.param("username");
+        const { message, gigs } =
+            await gigHndlr.getTopRatedGigsByCategory(username);
+
+        return c.json({ message, gigs }, StatusCodes.OK);
+    });
+    api.get("/gig/similar/:gigId", async (c: Context) => {
+        const gigId = c.req.param("gigId");
+        const { message, gigs } = await gigHndlr.getGigsMoreLikeThis(gigId);
+
+        return c.json({ message, gigs }, StatusCodes.OK);
+    });
+
+    api.post("/gig/create", async (c: Context) => {
+        const jsonBody = await c.req.json();
+        const { message, gig } = await gigHndlr.createGig(jsonBody);
+
+        return c.json({ message, gig }, StatusCodes.CREATED);
+    });
+
+    api.put("/gig/:gigId", async (c: Context) => {
+        const gigId = c.req.param("gigId");
+        const jsonBody = await c.req.json();
+        const { message, gig } = await gigHndlr.updateGig(gigId, jsonBody);
+
+        return c.json({ message, gig }, StatusCodes.OK);
+    });
+
+    api.put("/gig/active-status/:gigId", async (c: Context) => {
+        const gigId = c.req.param("gigId");
+        const jsonBody = await c.req.json();
+        const { message, gig } = await gigHndlr.updateGigActiveStatus(
+            gigId,
+            jsonBody
         );
 
-        this.router.put(
-            "/gig/:gigId",
-            authMiddleware.verifyAuth,
-            this.controller.updateGig
-        );
+        return c.json({ message, gig }, StatusCodes.OK);
+    });
 
-        this.router.put(
-            "/gig/active-status/:gigId",
-            authMiddleware.verifyAuth,
-            this.controller.updateGigActiveStatus
-        );
+    api.delete("/gig/:gigId/:sellerId", async (c: Context) => {
+        const { gigId, sellerId } = c.req.param();
+        const { message } = await gigHndlr.deleteGig(gigId, sellerId);
 
-        this.router.delete(
-            "/gig/:gigId/:sellerId",
-            authMiddleware.verifyAuth,
-            this.controller.deleteGig
-        );
+        return c.json({ message }, StatusCodes.OK);
+    });
 
-        this.router.put(
-            "/gig/seed/:count",
-            authMiddleware.verifyAuth,
-            this.controller.populateGigs
-        );
-        return this.router;
-    }
+    api.put("/gig/seed/:count", async (c: Context) => {
+        const count = c.req.param("count");
+        const { message } = await gigHndlr.populateGigs(count);
+
+        return c.json({ message }, StatusCodes.OK);
+    });
 }
-
-export const gigRoutes = new GigRoutes();
