@@ -1,25 +1,25 @@
-import axios from "axios";
-import jwt from "jsonwebtoken";
-import { GATEWAY_JWT_TOKEN } from "@gateway/config";
+import axios from "axios"
+import jwt from "jsonwebtoken"
+import { GATEWAY_JWT_TOKEN } from "@gateway/config"
 
 export class AxiosService {
-    public axios: ReturnType<typeof axios.create>;
+    public axios: ReturnType<typeof axios.create>
 
     constructor(baseUrl: string, serviceName: string) {
-        this.axios = this.axiosCreateInstance(baseUrl, serviceName);
+        this.axios = this.axiosCreateInstance(baseUrl, serviceName)
     }
 
     public axiosCreateInstance(
         baseUrl: string,
         serviceName?: string
     ): ReturnType<typeof axios.create> {
-        let gatewaytoken = "";
+        let gatewaytoken = ""
         if (serviceName) {
             gatewaytoken = jwt.sign({ id: serviceName }, GATEWAY_JWT_TOKEN!, {
                 issuer: "Jobber Auth",
                 algorithm: "HS512",
                 expiresIn: "1d"
-            });
+            })
         }
 
         const instance: ReturnType<typeof axios.create> = axios.create({
@@ -31,8 +31,8 @@ export class AxiosService {
                 gatewaytoken
             },
             withCredentials: true
-        });
+        })
 
-        return instance;
+        return instance
     }
 }

@@ -1,52 +1,54 @@
-import http from "http";
+import http from "http"
 
 import {
     CLIENT_URL,
     PORT,
-    REDIS_HOST
-} from "@gateway/config";
-import { CustomError } from "@Akihira77/jobber-shared";
-import { StatusCodes } from "http-status-codes";
-import { ElasticSearchClient } from "@gateway/elasticsearch";
-import { appRoutes } from "@gateway/routes";
-import { axiosAuthInstance } from "@gateway/services/api/auth.api.service";
-import { isAxiosError } from "axios";
-import { axiosBuyerInstance } from "@gateway/services/api/buyer.api.service";
-import { axiosSellerInstance } from "@gateway/services/api/seller.api.service";
-import { axiosGigInstance } from "@gateway/services/api/gig.api.service";
-import { Server } from "socket.io";
-import { createAdapter } from "@socket.io/redis-adapter";
-import { SocketIOAppHandler } from "@gateway/sockets/socket";
-import { axiosChatInstance } from "@gateway/services/api/chat.api.service";
-import { axiosOrderInstance } from "@gateway/services/api/order.api.service";
-import { axiosReviewInstance } from "@gateway/services/api/review.api.service";
-import { createClient } from "redis";
-import { Logger } from "winston";
-import { Context, Hono, Next } from "hono";
-import { cors } from "hono/cors";
-import { compress } from "hono/compress";
-import { timeout } from "hono/timeout";
-import { csrf } from "hono/csrf";
-import { secureHeaders } from "hono/secure-headers";
-import { bodyLimit } from "hono/body-limit";
-import { rateLimiter } from "hono-rate-limiter";
-import { HTTPException } from "hono/http-exception";
-import { getCookie } from "hono/cookie";
-import { StatusCode } from "hono/utils/http-status";
-import { ServerType } from "@hono/node-server/dist/types";
-import { serve } from "@hono/node-server";
+    REDIS_HOST,
+    SECRET_KEY_ONE,
+    SECRET_KEY_TWO
+} from "@gateway/config"
+import { CustomError } from "@Akihira77/jobber-shared"
+import { StatusCodes } from "http-status-codes"
+import { ElasticSearchClient } from "@gateway/elasticsearch"
+import { appRoutes } from "@gateway/routes"
+import { axiosAuthInstance } from "@gateway/services/api/auth.api.service"
+import { isAxiosError } from "axios"
+import { axiosBuyerInstance } from "@gateway/services/api/buyer.api.service"
+import { axiosSellerInstance } from "@gateway/services/api/seller.api.service"
+import { axiosGigInstance } from "@gateway/services/api/gig.api.service"
+import { Server } from "socket.io"
+import { createAdapter } from "@socket.io/redis-adapter"
+import { SocketIOAppHandler } from "@gateway/sockets/socket"
+import { axiosChatInstance } from "@gateway/services/api/chat.api.service"
+import { axiosOrderInstance } from "@gateway/services/api/order.api.service"
+import { axiosReviewInstance } from "@gateway/services/api/review.api.service"
+import { createClient } from "redis"
+import { Logger } from "winston"
+import { Context, Hono, Next } from "hono"
+import { cors } from "hono/cors"
+import { compress } from "hono/compress"
+import { timeout } from "hono/timeout"
+import { csrf } from "hono/csrf"
+import { secureHeaders } from "hono/secure-headers"
+import { bodyLimit } from "hono/body-limit"
+import { rateLimiter } from "hono-rate-limiter"
+import { HTTPException } from "hono/http-exception"
+import { getSignedCookie } from "hono/cookie"
+import { StatusCode } from "hono/utils/http-status"
+import { ServerType } from "@hono/node-server/dist/types"
+import { serve } from "@hono/node-server"
+import { logger } from "hono/logger"
+import { RedisClient } from "./redis/gateway.redis"
 
-import { RedisClient } from "./redis/gateway.redis";
-
-const DEFAULT_ERROR_CODE = 500;
-export let socketIO: Server;
-const LIMIT_TIMEOUT = 2 * 1000 + 500; // 2s
+const DEFAULT_ERROR_CODE = 500
+export let socketIO: Server
+const LIMIT_TIMEOUT = 2 * 1000 + 500 // 2s
 
 export class GatewayServer {
-    private app: Hono;
+    private app: Hono
 
     constructor(app: Hono) {
-        this.app = app;
+        this.app = app
     }
 
     public start(
@@ -54,12 +56,12 @@ export class GatewayServer {
         redis: RedisClient,
         logger: (moduleName: string) => Logger
     ): void {
-        this.startElasticSearch(elastic);
-        this.securityMiddleware(this.app);
-        this.standardMiddleware(this.app);
-        this.routesMiddleware(this.app, redis);
-        this.errorHandler(this.app, logger);
-        this.startServer(this.app, redis, logger);
+        this.startElasticSearch(elastic)
+        this.errorHandler(this.app, logger)
+        this.securityMiddleware(this.app)
+        this.standardMiddleware(this.app)
+        this.routesMiddleware(this.app, redis)
+        this.startServer(this.app, redis, logger)
     }
 
     private securityMiddleware(app: Hono): void {
@@ -67,51 +69,52 @@ export class GatewayServer {
             timeout(LIMIT_TIMEOUT, () => {
                 return new HTTPException(StatusCodes.REQUEST_TIMEOUT, {
                     message: `Request timeout after waiting ${LIMIT_TIMEOUT}ms. Please try again later.`
-                });
+                })
             })
-        );
-        app.use(secureHeaders());
+        )
+        app.use(secureHeaders())
         app.use(
             csrf({
-                origin: [
-                    `${CLIENT_URL}`,
-                ]
+                origin: [`${CLIENT_URL}`]
             })
-        );
+        )
         app.use(
             cors({
-                origin: [
-                    `${CLIENT_URL}`,
-                ],
+                origin: [`${CLIENT_URL}`],
                 credentials: true,
                 allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
             })
-        );
+        )
         app.use(async (c: Context, next: Next) => {
-            const token = getCookie(c, "session");
+            const token = await getSignedCookie(
+                c,
+                `${SECRET_KEY_ONE}${SECRET_KEY_TWO}`,
+                "session"
+            )
             if (token) {
                 axiosAuthInstance.defaults.headers["Authorization"] =
-                    `Bearer ${token}`;
+                    `Bearer ${token}`
                 axiosBuyerInstance.defaults.headers["Authorization"] =
-                    `Bearer ${token}`;
+                    `Bearer ${token}`
                 axiosSellerInstance.defaults.headers["Authorization"] =
-                    `Bearer ${token}`;
+                    `Bearer ${token}`
                 axiosGigInstance.defaults.headers["Authorization"] =
-                    `Bearer ${token}`;
+                    `Bearer ${token}`
                 axiosChatInstance.defaults.headers["Authorization"] =
-                    `Bearer ${token}`;
+                    `Bearer ${token}`
                 axiosOrderInstance.defaults.headers["Authorization"] =
-                    `Bearer ${token}`;
+                    `Bearer ${token}`
                 axiosReviewInstance.defaults.headers["Authorization"] =
-                    `Bearer ${token}`;
+                    `Bearer ${token}`
             }
 
-            await next();
-        });
+            await next()
+        })
     }
 
     private standardMiddleware(app: Hono): void {
-        app.use(compress());
+        app.use(logger())
+        app.use(compress())
         app.use(
             bodyLimit({
                 maxSize: 2 * 100 * 1000 * 1024, //200mb
@@ -119,17 +122,17 @@ export class GatewayServer {
                     return c.text(
                         "Your request is too big",
                         StatusCodes.REQUEST_HEADER_FIELDS_TOO_LARGE
-                    );
+                    )
                 }
             })
-        );
+        )
 
         const generateRandomNumber = (length: number): number => {
             return (
                 Math.floor(Math.random() * (9 * Math.pow(10, length - 1))) +
                 Math.pow(10, length - 1)
-            );
-        };
+            )
+        }
 
         app.use(
             rateLimiter({
@@ -138,15 +141,15 @@ export class GatewayServer {
                 standardHeaders: "draft-6",
                 keyGenerator: () => generateRandomNumber(12).toString()
             })
-        );
+        )
     }
 
     private routesMiddleware(app: Hono, redis: RedisClient): void {
-        appRoutes(app, redis);
+        appRoutes(app, redis)
     }
 
     private startElasticSearch(elastic: ElasticSearchClient): void {
-        elastic.checkConnection();
+        elastic.checkConnection()
     }
 
     private errorHandler(
@@ -154,41 +157,43 @@ export class GatewayServer {
         logger: (moduleName: string) => Logger
     ): void {
         app.notFound((c) => {
-            return c.text("Route path is not found", StatusCodes.NOT_FOUND);
-        });
+            return c.text("Route path is not found", StatusCodes.NOT_FOUND)
+        })
 
         app.onError((err: Error, c: Context) => {
             if (err instanceof CustomError) {
                 logger("server.ts - errorHandler()").error(
                     `GatewayService ${err.comingFrom}:`,
                     err
-                );
+                )
                 return c.json(
                     err.serializeErrors(),
                     (err.statusCode as StatusCode) ??
                         StatusCodes.INTERNAL_SERVER_ERROR
-                );
+                )
             } else if (err instanceof HTTPException) {
-                return err.getResponse();
+                return err.getResponse()
             } else if (isAxiosError(err)) {
+                console.log(err)
                 logger("server.ts - errorHandler()").error(
                     `GatewayService Axios Error - ${err?.response?.data?.comingFrom}:`,
                     err.message
-                );
+                )
                 return c.json(
                     {
                         message:
                             err?.response?.data?.message ?? "Error occurred."
                     },
                     err?.response?.data?.statusCode ?? DEFAULT_ERROR_CODE
-                );
+                )
             }
 
+            console.log(err)
             return c.text(
                 "Unexpected error occured. Please try again",
                 StatusCodes.INTERNAL_SERVER_ERROR
-            );
-        });
+            )
+        })
     }
 
     private async startServer(
@@ -197,17 +202,17 @@ export class GatewayServer {
         logger: (moduleName: string) => Logger
     ): Promise<void> {
         try {
-            const server = this.startHttpServer(app, logger);
+            const server = this.startHttpServer(app, logger)
             const io: Server = await this.createSocketIO(
                 server as http.Server,
                 logger
-            );
-            this.socketIOConnections(io, redis, logger);
+            )
+            this.socketIOConnections(io, redis, logger)
         } catch (error) {
             logger("server.ts - startServer()").error(
                 "GatewayService startServer() method error:",
                 error
-            );
+            )
         }
     }
 
@@ -220,18 +225,18 @@ export class GatewayServer {
                 origin: [`${CLIENT_URL}`],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
             }
-        });
-        const pubClient = createClient({ url: `${REDIS_HOST}` });
-        const subClient = pubClient.duplicate();
+        })
+        const pubClient = createClient({ url: `${REDIS_HOST}` })
+        const subClient = pubClient.duplicate()
 
-        await Promise.all([pubClient.connect(), subClient.connect()]);
-        io.adapter(createAdapter(pubClient, subClient));
+        await Promise.all([pubClient.connect(), subClient.connect()])
+        io.adapter(createAdapter(pubClient, subClient))
 
         logger("server.ts - createSocketIO()").info(
             "GatewayService SocketIO and Redis Pub-Sub Adapter is established."
-        );
-        socketIO = io;
-        return io;
+        )
+        socketIO = io
+        return io
     }
 
     private startHttpServer(
@@ -241,7 +246,7 @@ export class GatewayServer {
         try {
             logger("server.ts - startHttpServer()").info(
                 `GatewayService has started with pid ${process.pid}`
-            );
+            )
 
             const server = serve(
                 {
@@ -252,18 +257,18 @@ export class GatewayServer {
                 (info) => {
                     logger("server.ts - startHttpServer()").info(
                         `GatewayService running on port ${info.port}`
-                    );
+                    )
                 }
-            );
+            )
 
-            return server;
+            return server
         } catch (error) {
             logger("server.ts - startHttpServer()").error(
                 "GatewayService startServer() method error:",
                 error
-            );
+            )
 
-            process.exit(1);
+            process.exit(1)
         }
     }
 
@@ -272,8 +277,8 @@ export class GatewayServer {
         redis: RedisClient,
         logger: (moduleName: string) => Logger
     ): void {
-        const socketIoApp = new SocketIOAppHandler(io, redis, logger);
+        const socketIoApp = new SocketIOAppHandler(io, redis, logger)
 
-        socketIoApp.listen();
+        socketIoApp.listen()
     }
 }

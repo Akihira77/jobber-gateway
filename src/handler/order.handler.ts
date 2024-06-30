@@ -1,75 +1,75 @@
-import { orderService } from "@gateway/services/api/order.api.service";
+import { orderService } from "@gateway/services/api/order.api.service"
 
 export class OrderHandler {
     public async getOrderByOrderId(
         orderId: string
     ): Promise<{ message: string; order: any }> {
-        const response = await orderService.getOrderByOrderId(orderId);
+        const response = await orderService.getOrderByOrderId(orderId)
 
         return {
             message: response.data.message,
             order: response.data.order
-        };
+        }
     }
 
     public async getSellerOrders(
-        orderId: string
+        sellerId: string
     ): Promise<{ message: string; orders: any }> {
-        const response = await orderService.getOrdersBySellerId(orderId);
+        const response = await orderService.getOrdersBySellerId(sellerId)
 
         return {
             message: response.data.message,
             orders: response.data.orders
-        };
+        }
     }
 
     public async getBuyerOrders(
-        orderId: string
+        buyerId: string
     ): Promise<{ message: string; orders: any }> {
-        const response = await orderService.getOrdersByBuyerId(orderId);
+        const response = await orderService.getOrdersByBuyerId(buyerId)
 
         return {
             message: response.data.message,
             orders: response.data.orders
-        };
+        }
     }
 
     public async getNotifications(
         userTo: string
     ): Promise<{ message: string; notifications: any }> {
-        const response = await orderService.getNotifications(userTo);
+        const response = await orderService.getNotifications(userTo)
 
         return {
             message: response.data.message,
             notifications: response.data.notifications
-        };
+        }
     }
     public async createOrderIntent(reqBody: any): Promise<{
-        message: string;
-        clientSecret: string;
-        paymentIntentId: string;
+        message: string
+        clientSecret: string
+        paymentIntentId: string
     }> {
         const response = await orderService.createOrderIntent(
             reqBody.buyerId,
             reqBody.price
-        );
+        )
 
         return {
             message: response.data.message,
             clientSecret: response.data.clientSecret,
             paymentIntentId: response.data.paymentIntentId
-        };
+        }
     }
 
     public async buyerCreateOrder(
         reqBody: any
     ): Promise<{ message: string; order: any }> {
-        const response = await orderService.createOrder(reqBody);
+        const response = await orderService.createOrder(reqBody)
 
         return {
             message: response.data.message,
             order: response.data.order
-        };
+        }
     }
 
     public async sellerCancelOrder(
@@ -80,11 +80,11 @@ export class OrderHandler {
             orderId,
             reqBody.orderData,
             reqBody.paymentIntentId
-        );
+        )
 
         return {
             message: response.data.message
-        };
+        }
     }
 
     public async sellerRequestDeliveryDateExtension(
@@ -94,12 +94,12 @@ export class OrderHandler {
         const response = await orderService.requestDeliveryDateExtension(
             orderId,
             reqBody
-        );
+        )
 
         return {
             message: response.data.message,
             order: response.data.order
-        };
+        }
     }
 
     public async updateDeliveryDate(
@@ -111,47 +111,47 @@ export class OrderHandler {
             type,
             orderId,
             reqBody
-        );
+        )
 
         return {
             message: response.data.message,
             order: response.data.order
-        };
+        }
     }
 
     public async buyerApproveOrder(
         orderId: string,
         reqBody: any
     ): Promise<{ message: string; order: any }> {
-        const response = await orderService.approveOrder(orderId, reqBody);
+        const response = await orderService.approveOrder(orderId, reqBody)
 
         return {
             message: response.data.message,
             order: response.data.order
-        };
+        }
     }
 
     public async sellerDeliverOrder(
         orderId: string,
         reqBody: any
     ): Promise<{ message: string; order: any }> {
-        const response = await orderService.deliverOrder(orderId, reqBody);
+        const response = await orderService.deliverOrder(orderId, reqBody)
 
         return {
             message: response.data.message,
             order: response.data.order
-        };
+        }
     }
 
     public async markNotificationAsRead(
         notificationId: string
     ): Promise<{ message: string; notification: any }> {
         const response =
-            await orderService.markNotificationAsRead(notificationId);
+            await orderService.markNotificationAsRead(notificationId)
 
         return {
             message: response.data.message,
             notification: response.data.notification
-        };
+        }
     }
 }

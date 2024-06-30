@@ -1,26 +1,23 @@
-import axios, { AxiosResponse } from "axios";
-import { AxiosService } from "@gateway/services/axios";
-import { ORDER_BASE_URL } from "@gateway/config";
+import axios, { AxiosResponse } from "axios"
+import { AxiosService } from "@gateway/services/axios"
+import { ORDER_BASE_URL } from "@gateway/config"
 import {
     IDeliveredWork,
     IExtendedDelivery,
     IOrderDocument,
     IOrderMessage
-} from "@Akihira77/jobber-shared";
+} from "@Akihira77/jobber-shared"
 
 // Axios provider for Authenticated User
-export let axiosOrderInstance: ReturnType<typeof axios.create>;
+export let axiosOrderInstance: ReturnType<typeof axios.create>
 
 class OrderService {
     // Axios general provider
-    axiosService: AxiosService;
+    axiosService: AxiosService
 
     constructor() {
-        this.axiosService = new AxiosService(
-            `${ORDER_BASE_URL}/api/v1/order`,
-            "order"
-        );
-        axiosOrderInstance = this.axiosService.axios;
+        this.axiosService = new AxiosService(`${ORDER_BASE_URL}/order`, "order")
+        axiosOrderInstance = this.axiosService.axios
     }
 
     async createOrderIntent(
@@ -30,40 +27,37 @@ class OrderService {
         const response: AxiosResponse = await axiosOrderInstance.post(
             "/create-payment-intent",
             { buyerId, price }
-        );
+        )
 
-        return response;
+        return response
     }
 
     async createOrder(data: IOrderDocument): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.post(
-            "/",
-            data
-        );
+        const response: AxiosResponse = await axiosOrderInstance.post("/", data)
 
-        return response;
+        return response
     }
 
     async getOrderByOrderId(id: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.get(`/${id}`);
+        const response: AxiosResponse = await axiosOrderInstance.get(`/${id}`)
 
-        return response;
+        return response
     }
 
     async getOrdersBySellerId(id: string): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosOrderInstance.get(
             `/seller/${id}`
-        );
+        )
 
-        return response;
+        return response
     }
 
     async getOrdersByBuyerId(id: string): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosOrderInstance.get(
             `/buyer/${id}`
-        );
+        )
 
-        return response;
+        return response
     }
 
     async approveOrder(
@@ -73,9 +67,9 @@ class OrderService {
         const response: AxiosResponse = await axiosOrderInstance.put(
             `/approve-order/${orderId}`,
             data
-        );
+        )
 
-        return response;
+        return response
     }
 
     async cancelOrder(
@@ -86,9 +80,9 @@ class OrderService {
         const response: AxiosResponse = await axiosOrderInstance.put(
             `/cancel/${orderId}`,
             { orderData: data, paymentIntentId }
-        );
+        )
 
-        return response;
+        return response
     }
 
     async updateDeliveryDate(
@@ -99,9 +93,9 @@ class OrderService {
         const response: AxiosResponse = await axiosOrderInstance.put(
             `/gig/${type}/${orderId}`,
             data
-        );
+        )
 
-        return response;
+        return response
     }
 
     async requestDeliveryDateExtension(
@@ -111,9 +105,9 @@ class OrderService {
         const response: AxiosResponse = await axiosOrderInstance.put(
             `/extension/${orderId}`,
             data
-        );
+        )
 
-        return response;
+        return response
     }
 
     async deliverOrder(
@@ -123,17 +117,17 @@ class OrderService {
         const response: AxiosResponse = await axiosOrderInstance.put(
             `/deliver-order/${orderId}`,
             data
-        );
+        )
 
-        return response;
+        return response
     }
 
     async getNotifications(userId: string): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosOrderInstance.get(
             `/notifications/${userId}`
-        );
+        )
 
-        return response;
+        return response
     }
 
     async markNotificationAsRead(
@@ -144,10 +138,10 @@ class OrderService {
             {
                 notificationId
             }
-        );
+        )
 
-        return response;
+        return response
     }
 }
 
-export const orderService = new OrderService();
+export const orderService = new OrderService()

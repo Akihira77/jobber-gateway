@@ -1,46 +1,46 @@
-import axios, { AxiosResponse } from "axios";
-import { AxiosService } from "@gateway/services/axios";
-import { REVIEW_BASE_URL } from "@gateway/config";
-import { IReviewDocument } from "@Akihira77/jobber-shared";
+import axios, { AxiosResponse } from "axios"
+import { AxiosService } from "@gateway/services/axios"
+import { REVIEW_BASE_URL } from "@gateway/config"
+import { IReviewDocument } from "@Akihira77/jobber-shared"
 
-export let axiosReviewInstance: ReturnType<typeof axios.create>;
+export let axiosReviewInstance: ReturnType<typeof axios.create>
 
 class ReviewService {
     // Axios general provider
-    axiosService: AxiosService;
+    axiosService: AxiosService
 
     constructor() {
         this.axiosService = new AxiosService(
-            `${REVIEW_BASE_URL}/api/v1/review`,
+            `${REVIEW_BASE_URL}/review`,
             "review"
-        );
-        axiosReviewInstance = this.axiosService.axios;
+        )
+        axiosReviewInstance = this.axiosService.axios
     }
 
     async getReviewsByGigId(id: string): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosReviewInstance.get(
             `/gig/${id}`
-        );
+        )
 
-        return response;
+        return response
     }
 
     async getReviewsBySellerId(id: string): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosReviewInstance.get(
             `/seller/${id}`
-        );
+        )
 
-        return response;
+        return response
     }
 
     async addReview(data: IReviewDocument): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosReviewInstance.post(
             "/",
             data
-        );
+        )
 
-        return response;
+        return response
     }
 }
 
-export const reviewService = new ReviewService();
+export const reviewService = new ReviewService()

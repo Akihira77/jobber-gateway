@@ -1,62 +1,62 @@
-import axios, { AxiosResponse } from "axios";
-import { AxiosService } from "@gateway/services/axios";
-import { USERS_BASE_URL } from "@gateway/config";
-import { ISellerDocument } from "@Akihira77/jobber-shared";
+import axios, { AxiosResponse } from "axios"
+import { AxiosService } from "@gateway/services/axios"
+import { USERS_BASE_URL } from "@gateway/config"
+import { ISellerDocument } from "@Akihira77/jobber-shared"
 
 // Axios provider for Authenticated User
-export let axiosSellerInstance: ReturnType<typeof axios.create>;
+export let axiosSellerInstance: ReturnType<typeof axios.create>
 
 class SellerService {
     // Axios general provider
-    axiosService: AxiosService;
+    axiosService: AxiosService
 
     constructor() {
         this.axiosService = new AxiosService(
-            `${USERS_BASE_URL}/api/v1/seller`,
+            `${USERS_BASE_URL}/seller`,
             "seller"
-        );
-        axiosSellerInstance = this.axiosService.axios;
+        )
+        axiosSellerInstance = this.axiosService.axios
     }
 
     async getSellerById(id: string): Promise<AxiosResponse> {
-        const response = await axiosSellerInstance.get(`/id/${id}`);
+        const response = await axiosSellerInstance.get(`/id/${id}`)
 
-        return response;
+        return response
     }
 
     async getSellerByUsername(username: string): Promise<AxiosResponse> {
-        const response = await axiosSellerInstance.get(`/username/${username}`);
+        const response = await axiosSellerInstance.get(`/username/${username}`)
 
-        return response;
+        return response
     }
 
     async getRandomSellers(count: string): Promise<AxiosResponse> {
         // console.log(axiosSellerInstance.getUri() + "/random/" + count);
-        const response = await axiosSellerInstance.get(`/random/${count}`);
+        const response = await axiosSellerInstance.get(`/random/${count}`)
 
-        return response;
+        return response
     }
 
     async createSeller(request: ISellerDocument): Promise<AxiosResponse> {
-        const response = await axiosSellerInstance.post("/create", request);
+        const response = await axiosSellerInstance.post("/create", request)
 
-        return response;
+        return response
     }
 
     async updateSeller(
         sellerId: string,
         request: ISellerDocument
     ): Promise<AxiosResponse> {
-        const response = await axiosSellerInstance.put(`/${sellerId}`, request);
+        const response = await axiosSellerInstance.put(`/${sellerId}`, request)
 
-        return response;
+        return response
     }
 
     async seed(count: string): Promise<AxiosResponse> {
-        const response = await axiosSellerInstance.put(`/seed/${count}`);
+        const response = await axiosSellerInstance.put(`/seed/${count}`)
 
-        return response;
+        return response
     }
 }
 
-export const sellerService = new SellerService();
+export const sellerService = new SellerService()
