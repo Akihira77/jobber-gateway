@@ -1,4 +1,3 @@
-import { authMiddleware } from "@gateway/services/auth-middleware"
 import { OrderHandler } from "@gateway/handler/order.handler"
 import { BASE_PATH } from "@gateway/routes"
 import { Context, Hono } from "hono"
@@ -8,7 +7,6 @@ export function orderRoute(
     api: Hono<Record<string, never>, Record<string, never>, typeof BASE_PATH>
 ): void {
     const orderHndlr = new OrderHandler()
-    api.use(authMiddleware.verifyAuth)
 
     api.get("/order/:orderId", async (c: Context) => {
         const orderId = c.req.param("orderId")
@@ -46,7 +44,7 @@ export function orderRoute(
             StatusCodes.OK
         )
     })
-    api.post("/order", authMiddleware.verifyAuth, async (c: Context) => {
+    api.post("/order", async (c: Context) => {
         const jsonBody = await c.req.json()
         const { message, order } = await orderHndlr.buyerCreateOrder(jsonBody)
 

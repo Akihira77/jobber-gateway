@@ -1,169 +1,228 @@
-2024-06-24T01:42:22.786Z - CPU Usage: User: 406.00ms Sys: 78.00ms | Memory Total: 16179.30MB Used: 13954.01MB Free: 2225.29MB
-2024-06-24T01:43:22.798Z - CPU Usage: User: 421.00ms Sys: 78.00ms | Memory Total: 16179.30MB Used: 13893.13MB Free: 2286.18MB
-2024-06-24T01:44:22.806Z - CPU Usage: User: 437.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 14117.15MB Free: 2062.16MB
-2024-06-24T01:45:22.818Z - CPU Usage: User: 453.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13945.00MB Free: 2234.31MB
-2024-06-24T01:46:22.823Z - CPU Usage: User: 453.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13990.46MB Free: 2188.84MB
-2024-06-24T01:47:22.837Z - CPU Usage: User: 453.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13892.59MB Free: 2286.72MB
-2024-06-24T01:48:22.838Z - CPU Usage: User: 453.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13902.08MB Free: 2277.22MB
-2024-06-24T01:49:22.849Z - CPU Usage: User: 453.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 14235.16MB Free: 1944.15MB
-2024-06-24T01:50:22.860Z - CPU Usage: User: 453.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 14040.67MB Free: 2138.64MB
-2024-06-24T01:51:22.869Z - CPU Usage: User: 468.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 14127.50MB Free: 2051.80MB
-2024-06-24T01:52:22.874Z - CPU Usage: User: 484.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 14052.27MB Free: 2127.04MB
-2024-06-24T01:53:22.885Z - CPU Usage: User: 484.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 14078.52MB Free: 2100.79MB
-2024-06-24T01:54:22.890Z - CPU Usage: User: 484.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 14032.39MB Free: 2146.91MB
-2024-06-24T01:55:22.905Z - CPU Usage: User: 484.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 14144.14MB Free: 2035.16MB
-2024-06-24T01:56:22.905Z - CPU Usage: User: 484.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 14082.83MB Free: 2096.47MB
-2024-06-24T01:57:22.909Z - CPU Usage: User: 484.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13910.44MB Free: 2268.86MB
-2024-06-24T01:58:22.917Z - CPU Usage: User: 500.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13997.89MB Free: 2181.41MB
-2024-06-24T01:59:22.930Z - CPU Usage: User: 500.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13934.75MB Free: 2244.55MB
-2024-06-24T02:00:22.942Z - CPU Usage: User: 531.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 14058.14MB Free: 2121.16MB
-2024-06-24T02:01:22.943Z - CPU Usage: User: 531.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13730.56MB Free: 2448.75MB
-2024-06-24T02:02:22.952Z - CPU Usage: User: 531.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13252.66MB Free: 2926.64MB
-2024-06-24T02:03:22.965Z - CPU Usage: User: 531.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13277.09MB Free: 2902.21MB
-2024-06-24T02:04:22.968Z - CPU Usage: User: 531.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13223.22MB Free: 2956.09MB
-2024-06-24T02:05:22.973Z - CPU Usage: User: 531.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13351.43MB Free: 2827.87MB
-2024-06-24T02:06:22.978Z - CPU Usage: User: 531.00ms Sys: 93.00ms | Memory Total: 16179.30MB Used: 13452.55MB Free: 2726.75MB
-2024-06-24T02:07:22.985Z - CPU Usage: User: 546.00ms Sys: 125.00ms | Memory Total: 16179.30MB Used: 13496.80MB Free: 2682.50MB
-2024-06-24T02:08:22.998Z - CPU Usage: User: 546.00ms Sys: 125.00ms | Memory Total: 16179.30MB Used: 13391.72MB Free: 2787.59MB
-2024-06-24T02:09:22.999Z - CPU Usage: User: 609.00ms Sys: 125.00ms | Memory Total: 16179.30MB Used: 14426.89MB Free: 1752.41MB
-2024-06-24T02:10:23.013Z - CPU Usage: User: 656.00ms Sys: 140.00ms | Memory Total: 16179.30MB Used: 14426.50MB Free: 1752.80MB
-2024-06-24T02:11:23.014Z - CPU Usage: User: 687.00ms Sys: 140.00ms | Memory Total: 16179.30MB Used: 14117.67MB Free: 2061.64MB
-2024-06-24T02:12:23.024Z - CPU Usage: User: 687.00ms Sys: 140.00ms | Memory Total: 16179.30MB Used: 13852.00MB Free: 2327.30MB
-2024-06-24T02:13:23.034Z - CPU Usage: User: 687.00ms Sys: 140.00ms | Memory Total: 16179.30MB Used: 13739.25MB Free: 2440.05MB
-2024-06-24T02:14:23.043Z - CPU Usage: User: 687.00ms Sys: 140.00ms | Memory Total: 16179.30MB Used: 13653.83MB Free: 2525.48MB
-2024-06-24T02:15:23.055Z - CPU Usage: User: 687.00ms Sys: 140.00ms | Memory Total: 16179.30MB Used: 13546.94MB Free: 2632.36MB
-2024-06-24T02:16:23.061Z - CPU Usage: User: 687.00ms Sys: 140.00ms | Memory Total: 16179.30MB Used: 13492.97MB Free: 2686.34MB
-2024-06-24T02:17:23.068Z - CPU Usage: User: 703.00ms Sys: 140.00ms | Memory Total: 16179.30MB Used: 13216.66MB Free: 2962.64MB
-2024-06-24T02:18:23.082Z - CPU Usage: User: 703.00ms Sys: 156.00ms | Memory Total: 16179.30MB Used: 13322.34MB Free: 2856.97MB
-2024-06-24T02:19:23.091Z - CPU Usage: User: 703.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13258.85MB Free: 2920.46MB
-2024-06-24T02:20:23.094Z - CPU Usage: User: 718.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13195.75MB Free: 2983.55MB
-2024-06-24T02:21:23.100Z - CPU Usage: User: 718.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13218.80MB Free: 2960.50MB
-2024-06-24T02:22:23.110Z - CPU Usage: User: 718.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13140.18MB Free: 3039.12MB
-2024-06-24T02:23:23.118Z - CPU Usage: User: 718.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13212.49MB Free: 2966.82MB
-2024-06-24T02:24:23.121Z - CPU Usage: User: 718.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13423.71MB Free: 2755.59MB
-2024-06-24T02:25:23.123Z - CPU Usage: User: 734.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13350.64MB Free: 2828.66MB
-2024-06-24T02:26:23.130Z - CPU Usage: User: 734.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13526.13MB Free: 2653.18MB
-2024-06-24T02:27:23.134Z - CPU Usage: User: 734.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13305.86MB Free: 2873.45MB
-2024-06-24T02:28:23.136Z - CPU Usage: User: 734.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13407.99MB Free: 2771.32MB
-2024-06-24T02:29:23.140Z - CPU Usage: User: 734.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13337.17MB Free: 2842.13MB
-2024-06-24T02:30:23.146Z - CPU Usage: User: 734.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13403.73MB Free: 2775.57MB
-2024-06-24T02:31:23.154Z - CPU Usage: User: 750.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13407.70MB Free: 2771.60MB
-2024-06-24T02:32:23.163Z - CPU Usage: User: 750.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13554.97MB Free: 2624.34MB
-2024-06-24T02:33:23.174Z - CPU Usage: User: 750.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13565.59MB Free: 2613.71MB
-2024-06-24T02:34:23.177Z - CPU Usage: User: 750.00ms Sys: 171.00ms | Memory Total: 16179.30MB Used: 13523.10MB Free: 2656.20MB
-2024-06-24T02:35:23.182Z - CPU Usage: User: 750.00ms Sys: 187.00ms | Memory Total: 16179.30MB Used: 13527.06MB Free: 2652.25MB
-2024-06-24T02:36:23.184Z - CPU Usage: User: 750.00ms Sys: 187.00ms | Memory Total: 16179.30MB Used: 13619.76MB Free: 2559.54MB
-2024-06-24T02:37:23.195Z - CPU Usage: User: 796.00ms Sys: 187.00ms | Memory Total: 16179.30MB Used: 13845.68MB Free: 2333.63MB
-2024-06-24T02:38:23.200Z - CPU Usage: User: 796.00ms Sys: 203.00ms | Memory Total: 16179.30MB Used: 13870.41MB Free: 2308.89MB
-2024-06-24T02:39:23.213Z - CPU Usage: User: 796.00ms Sys: 234.00ms | Memory Total: 16179.30MB Used: 14003.82MB Free: 2175.48MB
-2024-06-24T02:40:23.220Z - CPU Usage: User: 796.00ms Sys: 234.00ms | Memory Total: 16179.30MB Used: 13907.92MB Free: 2271.38MB
-2024-06-24T02:41:23.233Z - CPU Usage: User: 796.00ms Sys: 234.00ms | Memory Total: 16179.30MB Used: 13916.19MB Free: 2263.12MB
-2024-06-24T02:42:23.234Z - CPU Usage: User: 796.00ms Sys: 250.00ms | Memory Total: 16179.30MB Used: 13576.28MB Free: 2603.03MB
-2024-06-24T02:43:23.249Z - CPU Usage: User: 812.00ms Sys: 250.00ms | Memory Total: 16179.30MB Used: 13477.73MB Free: 2701.58MB
-2024-06-24T02:44:23.257Z - CPU Usage: User: 828.00ms Sys: 250.00ms | Memory Total: 16179.30MB Used: 13316.75MB Free: 2862.56MB
-2024-06-24T02:45:23.266Z - CPU Usage: User: 843.00ms Sys: 250.00ms | Memory Total: 16179.30MB Used: 13332.96MB Free: 2846.34MB
-2024-06-24T02:46:23.277Z - CPU Usage: User: 843.00ms Sys: 250.00ms | Memory Total: 16179.30MB Used: 13318.08MB Free: 2861.22MB
-2024-06-24T02:47:23.282Z - CPU Usage: User: 875.00ms Sys: 250.00ms | Memory Total: 16179.30MB Used: 13445.96MB Free: 2733.34MB
-2024-06-24T02:48:23.284Z - CPU Usage: User: 875.00ms Sys: 250.00ms | Memory Total: 16179.30MB Used: 13325.47MB Free: 2853.83MB
-2024-06-24T02:49:23.285Z - CPU Usage: User: 890.00ms Sys: 250.00ms | Memory Total: 16179.30MB Used: 13541.75MB Free: 2637.55MB
-2024-06-25T03:50:47.498Z - CPU Usage: User: 1640.00ms Sys: 703.00ms | Memory Total: 16179.30MB Used: 15104.57MB Free: 1074.74MB
-2024-06-25T03:51:47.502Z - CPU Usage: User: 1640.00ms Sys: 703.00ms | Memory Total: 16179.30MB Used: 14772.33MB Free: 1406.97MB
-2024-06-25T03:52:47.512Z - CPU Usage: User: 1671.00ms Sys: 718.00ms | Memory Total: 16179.30MB Used: 15070.45MB Free: 1108.86MB
-2024-06-25T03:53:47.520Z - CPU Usage: User: 1718.00ms Sys: 718.00ms | Memory Total: 16179.30MB Used: 15338.69MB Free: 840.61MB
-2024-06-25T03:54:47.524Z - CPU Usage: User: 1734.00ms Sys: 734.00ms | Memory Total: 16179.30MB Used: 15732.64MB Free: 446.66MB
-2024-06-25T03:56:36.450Z - CPU Usage: User: 953.00ms Sys: 500.00ms | Memory Total: 16179.30MB Used: 14835.75MB Free: 1343.55MB
-2024-06-25T03:57:36.454Z - CPU Usage: User: 953.00ms Sys: 500.00ms | Memory Total: 16179.30MB Used: 14716.43MB Free: 1462.88MB
-2024-06-25T03:58:36.458Z - CPU Usage: User: 968.00ms Sys: 500.00ms | Memory Total: 16179.30MB Used: 14735.68MB Free: 1443.63MB
-2024-06-25T03:59:36.461Z - CPU Usage: User: 968.00ms Sys: 500.00ms | Memory Total: 16179.30MB Used: 14733.82MB Free: 1445.48MB
-2024-06-25T04:00:36.470Z - CPU Usage: User: 968.00ms Sys: 500.00ms | Memory Total: 16179.30MB Used: 14412.21MB Free: 1767.09MB
-2024-06-25T04:01:36.485Z - CPU Usage: User: 984.00ms Sys: 500.00ms | Memory Total: 16179.30MB Used: 14460.33MB Free: 1718.97MB
-2024-06-25T04:02:36.499Z - CPU Usage: User: 984.00ms Sys: 515.00ms | Memory Total: 16179.30MB Used: 14435.08MB Free: 1744.22MB
-2024-06-25T04:03:36.510Z - CPU Usage: User: 984.00ms Sys: 546.00ms | Memory Total: 16179.30MB Used: 14628.78MB Free: 1550.52MB
-2024-06-25T04:04:36.513Z - CPU Usage: User: 984.00ms Sys: 546.00ms | Memory Total: 16179.30MB Used: 14592.59MB Free: 1586.72MB
-2024-06-25T04:05:36.515Z - CPU Usage: User: 1000.00ms Sys: 562.00ms | Memory Total: 16179.30MB Used: 14758.77MB Free: 1420.54MB
-2024-06-25T04:06:36.526Z - CPU Usage: User: 1015.00ms Sys: 562.00ms | Memory Total: 16179.30MB Used: 14222.52MB Free: 1956.79MB
-2024-06-25T04:07:36.525Z - CPU Usage: User: 1015.00ms Sys: 562.00ms | Memory Total: 16179.30MB Used: 14210.26MB Free: 1969.05MB
-2024-06-25T04:08:36.540Z - CPU Usage: User: 1031.00ms Sys: 562.00ms | Memory Total: 16179.30MB Used: 14207.55MB Free: 1971.75MB
-2024-06-25T04:09:36.545Z - CPU Usage: User: 1062.00ms Sys: 562.00ms | Memory Total: 16179.30MB Used: 14319.66MB Free: 1859.64MB
-2024-06-25T04:10:36.557Z - CPU Usage: User: 1078.00ms Sys: 593.00ms | Memory Total: 16179.30MB Used: 14125.39MB Free: 2053.91MB
-2024-06-25T04:11:36.570Z - CPU Usage: User: 1093.00ms Sys: 593.00ms | Memory Total: 16179.30MB Used: 13903.75MB Free: 2275.56MB
-2024-06-25T04:12:36.581Z - CPU Usage: User: 1109.00ms Sys: 609.00ms | Memory Total: 16179.30MB Used: 13964.70MB Free: 2214.60MB
-2024-06-25T04:13:36.584Z - CPU Usage: User: 1125.00ms Sys: 609.00ms | Memory Total: 16179.30MB Used: 13959.71MB Free: 2219.59MB
-2024-06-25T04:14:36.594Z - CPU Usage: User: 1125.00ms Sys: 609.00ms | Memory Total: 16179.30MB Used: 13981.84MB Free: 2197.46MB
-2024-06-25T04:15:36.600Z - CPU Usage: User: 1125.00ms Sys: 609.00ms | Memory Total: 16179.30MB Used: 14044.34MB Free: 2134.97MB
-2024-06-25T04:16:36.614Z - CPU Usage: User: 1125.00ms Sys: 609.00ms | Memory Total: 16179.30MB Used: 13990.89MB Free: 2188.41MB
-2024-06-25T04:17:36.620Z - CPU Usage: User: 1140.00ms Sys: 609.00ms | Memory Total: 16179.30MB Used: 13990.59MB Free: 2188.71MB
-2024-06-25T04:18:36.626Z - CPU Usage: User: 1156.00ms Sys: 625.00ms | Memory Total: 16179.30MB Used: 13991.16MB Free: 2188.14MB
-2024-06-25T04:19:36.633Z - CPU Usage: User: 1156.00ms Sys: 625.00ms | Memory Total: 16179.30MB Used: 14000.27MB Free: 2179.04MB
-2024-06-30T01:52:19.250Z - CPU Usage: User: 1656.00ms Sys: 500.00ms | Memory Total: 16179.30MB Used: 13853.78MB Free: 2325.53MB
-2024-06-30T01:53:19.257Z - CPU Usage: User: 1671.00ms Sys: 500.00ms | Memory Total: 16179.30MB Used: 13906.30MB Free: 2273.00MB
-2024-06-30T01:54:32.893Z - CPU Usage: User: 1218.00ms Sys: 296.00ms | Memory Total: 16179.30MB Used: 13909.79MB Free: 2269.51MB
-2024-06-30T01:55:32.897Z - CPU Usage: User: 1390.00ms Sys: 312.00ms | Memory Total: 16179.30MB Used: 13734.61MB Free: 2444.70MB
-2024-06-30T01:56:32.902Z - CPU Usage: User: 1406.00ms Sys: 312.00ms | Memory Total: 16179.30MB Used: 13894.77MB Free: 2284.54MB
-2024-06-30T01:57:32.911Z - CPU Usage: User: 1453.00ms Sys: 312.00ms | Memory Total: 16179.30MB Used: 13947.51MB Free: 2231.79MB
-2024-06-30T01:58:32.916Z - CPU Usage: User: 1546.00ms Sys: 359.00ms | Memory Total: 16179.30MB Used: 13497.39MB Free: 2681.91MB
-2024-06-30T01:59:32.924Z - CPU Usage: User: 1562.00ms Sys: 359.00ms | Memory Total: 16179.30MB Used: 14085.65MB Free: 2093.65MB
-2024-06-30T02:00:32.925Z - CPU Usage: User: 1703.00ms Sys: 359.00ms | Memory Total: 16179.30MB Used: 14166.61MB Free: 2012.70MB
-2024-06-30T02:01:32.940Z - CPU Usage: User: 1812.00ms Sys: 375.00ms | Memory Total: 16179.30MB Used: 14280.91MB Free: 1898.40MB
-2024-06-30T02:02:32.952Z - CPU Usage: User: 1812.00ms Sys: 375.00ms | Memory Total: 16179.30MB Used: 14438.00MB Free: 1741.30MB
-2024-06-30T02:03:32.954Z - CPU Usage: User: 1812.00ms Sys: 375.00ms | Memory Total: 16179.30MB Used: 14322.73MB Free: 1856.57MB
-2024-06-30T02:04:32.965Z - CPU Usage: User: 1828.00ms Sys: 437.00ms | Memory Total: 16179.30MB Used: 14493.20MB Free: 1686.11MB
-2024-06-30T02:07:37.153Z - CPU Usage: User: 3906.00ms Sys: 281.00ms | Memory Total: 16179.30MB Used: 14661.92MB Free: 1517.38MB
-2024-06-30T02:09:15.338Z - CPU Usage: User: 5546.00ms Sys: 578.00ms | Memory Total: 16179.30MB Used: 14733.26MB Free: 1446.04MB
-2024-06-30T02:10:15.337Z - CPU Usage: User: 5578.00ms Sys: 593.00ms | Memory Total: 16179.30MB Used: 14932.05MB Free: 1247.25MB
-2024-06-30T02:11:15.340Z - CPU Usage: User: 5593.00ms Sys: 593.00ms | Memory Total: 16179.30MB Used: 14917.62MB Free: 1261.69MB
-2024-06-30T02:13:00.916Z - CPU Usage: User: 6078.00ms Sys: 765.00ms | Memory Total: 16179.30MB Used: 14320.60MB Free: 1858.71MB
-2024-06-30T02:14:46.443Z - CPU Usage: User: 5765.00ms Sys: 500.00ms | Memory Total: 16179.30MB Used: 14438.15MB Free: 1741.15MB
-2024-06-30T02:15:46.453Z - CPU Usage: User: 5765.00ms Sys: 500.00ms | Memory Total: 16179.30MB Used: 14381.21MB Free: 1798.09MB
-2024-06-30T02:17:14.165Z - CPU Usage: User: 5078.00ms Sys: 421.00ms | Memory Total: 16179.30MB Used: 14702.90MB Free: 1476.41MB
-2024-06-30T02:19:49.078Z - CPU Usage: User: 3937.00ms Sys: 390.00ms | Memory Total: 16179.30MB Used: 14766.13MB Free: 1413.18MB
-2024-06-30T02:23:06.088Z - CPU Usage: User: 3718.00ms Sys: 484.00ms | Memory Total: 16179.30MB Used: 14986.56MB Free: 1192.74MB
-2024-06-30T02:24:06.088Z - CPU Usage: User: 3984.00ms Sys: 515.00ms | Memory Total: 16179.30MB Used: 15058.77MB Free: 1120.53MB
-2024-06-30T02:25:06.092Z - CPU Usage: User: 4171.00ms Sys: 562.00ms | Memory Total: 16179.30MB Used: 14986.02MB Free: 1193.29MB
-2024-06-30T02:27:12.029Z - CPU Usage: User: 4828.00ms Sys: 531.00ms | Memory Total: 16179.30MB Used: 15160.94MB Free: 1018.36MB
-2024-06-30T02:28:12.039Z - CPU Usage: User: 4906.00ms Sys: 531.00ms | Memory Total: 16179.30MB Used: 15047.77MB Free: 1131.54MB
-2024-06-30T02:29:55.383Z - CPU Usage: User: 3812.00ms Sys: 515.00ms | Memory Total: 16179.30MB Used: 14749.99MB Free: 1429.31MB
-2024-06-30T02:30:55.382Z - CPU Usage: User: 3843.00ms Sys: 531.00ms | Memory Total: 16179.30MB Used: 14776.47MB Free: 1402.83MB
-2024-06-30T02:31:55.395Z - CPU Usage: User: 3859.00ms Sys: 546.00ms | Memory Total: 16179.30MB Used: 14826.32MB Free: 1352.99MB
-2024-06-30T02:34:17.053Z - CPU Usage: User: 4828.00ms Sys: 359.00ms | Memory Total: 16179.30MB Used: 14854.20MB Free: 1325.11MB
-2024-06-30T02:35:17.056Z - CPU Usage: User: 4828.00ms Sys: 359.00ms | Memory Total: 16179.30MB Used: 14857.79MB Free: 1321.52MB
-2024-06-30T02:36:17.062Z - CPU Usage: User: 4875.00ms Sys: 359.00ms | Memory Total: 16179.30MB Used: 14882.89MB Free: 1296.41MB
-2024-06-30T02:37:17.073Z - CPU Usage: User: 4875.00ms Sys: 359.00ms | Memory Total: 16179.30MB Used: 14852.51MB Free: 1326.79MB
-2024-06-30T02:38:17.087Z - CPU Usage: User: 4875.00ms Sys: 359.00ms | Memory Total: 16179.30MB Used: 14786.99MB Free: 1392.31MB
-2024-06-30T02:39:17.090Z - CPU Usage: User: 4906.00ms Sys: 359.00ms | Memory Total: 16179.30MB Used: 15547.97MB Free: 631.34MB
-2024-06-30T02:40:17.136Z - CPU Usage: User: 4906.00ms Sys: 359.00ms | Memory Total: 16179.30MB Used: 15908.45MB Free: 270.85MB
-2024-06-30T02:42:51.073Z - CPU Usage: User: 8890.00ms Sys: 890.00ms | Memory Total: 16179.30MB Used: 13726.11MB Free: 2453.20MB
-2024-06-30T02:43:51.076Z - CPU Usage: User: 9015.00ms Sys: 937.00ms | Memory Total: 16179.30MB Used: 14227.21MB Free: 1952.09MB
-2024-06-30T02:44:51.079Z - CPU Usage: User: 9031.00ms Sys: 953.00ms | Memory Total: 16179.30MB Used: 14428.33MB Free: 1750.97MB
-2024-06-30T02:45:51.086Z - CPU Usage: User: 9031.00ms Sys: 953.00ms | Memory Total: 16179.30MB Used: 14518.80MB Free: 1660.51MB
-2024-06-30T02:46:51.100Z - CPU Usage: User: 9031.00ms Sys: 953.00ms | Memory Total: 16179.30MB Used: 14166.07MB Free: 2013.23MB
-2024-06-30T02:47:51.112Z - CPU Usage: User: 9046.00ms Sys: 953.00ms | Memory Total: 16179.30MB Used: 13912.35MB Free: 2266.95MB
-2024-06-30T02:48:51.114Z - CPU Usage: User: 9046.00ms Sys: 953.00ms | Memory Total: 16179.30MB Used: 14059.81MB Free: 2119.50MB
-2024-06-30T02:49:51.117Z - CPU Usage: User: 9046.00ms Sys: 953.00ms | Memory Total: 16179.30MB Used: 14114.45MB Free: 2064.86MB
-2024-06-30T02:50:51.134Z - CPU Usage: User: 9171.00ms Sys: 984.00ms | Memory Total: 16179.30MB Used: 14343.45MB Free: 1835.86MB
-2024-06-30T02:51:51.136Z - CPU Usage: User: 9296.00ms Sys: 1000.00ms | Memory Total: 16179.30MB Used: 14242.80MB Free: 1936.51MB
-2024-06-30T02:52:51.138Z - CPU Usage: User: 9296.00ms Sys: 1015.00ms | Memory Total: 16179.30MB Used: 14242.19MB Free: 1937.12MB
-2024-06-30T02:53:51.145Z - CPU Usage: User: 9359.00ms Sys: 1031.00ms | Memory Total: 16179.30MB Used: 14387.84MB Free: 1791.47MB
-2024-06-30T02:54:51.154Z - CPU Usage: User: 9406.00ms Sys: 1031.00ms | Memory Total: 16179.30MB Used: 14590.55MB Free: 1588.75MB
-2024-06-30T02:55:51.161Z - CPU Usage: User: 9625.00ms Sys: 1031.00ms | Memory Total: 16179.30MB Used: 14545.72MB Free: 1633.58MB
-2024-06-30T02:56:51.170Z - CPU Usage: User: 9687.00ms Sys: 1062.00ms | Memory Total: 16179.30MB Used: 14557.45MB Free: 1621.85MB
-2024-06-30T02:57:51.191Z - CPU Usage: User: 9734.00ms Sys: 1078.00ms | Memory Total: 16179.30MB Used: 14609.18MB Free: 1570.13MB
-2024-06-30T02:58:51.197Z - CPU Usage: User: 9734.00ms Sys: 1078.00ms | Memory Total: 16179.30MB Used: 14608.88MB Free: 1570.43MB
-2024-06-30T02:59:51.209Z - CPU Usage: User: 9750.00ms Sys: 1078.00ms | Memory Total: 16179.30MB Used: 14703.96MB Free: 1475.34MB
-2024-06-30T03:01:18.946Z - CPU Usage: User: 3953.00ms Sys: 328.00ms | Memory Total: 16179.30MB Used: 15005.27MB Free: 1174.03MB
-2024-06-30T03:03:20.594Z - CPU Usage: User: 4359.00ms Sys: 343.00ms | Memory Total: 16179.30MB Used: 14733.84MB Free: 1445.46MB
-2024-06-30T03:05:09.693Z - CPU Usage: User: 5890.00ms Sys: 421.00ms | Memory Total: 16179.30MB Used: 15266.54MB Free: 912.77MB
-2024-06-30T03:06:09.698Z - CPU Usage: User: 5890.00ms Sys: 453.00ms | Memory Total: 16179.30MB Used: 16022.97MB Free: 156.33MB
-2024-06-30T03:07:09.710Z - CPU Usage: User: 5890.00ms Sys: 453.00ms | Memory Total: 16179.30MB Used: 14177.48MB Free: 2001.83MB
-2024-06-30T03:08:09.719Z - CPU Usage: User: 5953.00ms Sys: 468.00ms | Memory Total: 16179.30MB Used: 14033.32MB Free: 2145.98MB
-2024-06-30T03:09:18.861Z - CPU Usage: User: 3828.00ms Sys: 625.00ms | Memory Total: 16179.30MB Used: 14339.96MB Free: 1839.35MB
-2024-06-30T03:10:18.860Z - CPU Usage: User: 3828.00ms Sys: 625.00ms | Memory Total: 16179.30MB Used: 14479.53MB Free: 1699.77MB
-2024-06-30T03:13:28.240Z - CPU Usage: User: 4625.00ms Sys: 578.00ms | Memory Total: 16179.30MB Used: 13764.77MB Free: 2414.54MB
-2024-06-30T03:14:28.243Z - CPU Usage: User: 4625.00ms Sys: 578.00ms | Memory Total: 16179.30MB Used: 13828.78MB Free: 2350.52MB
-2024-06-30T03:15:28.248Z - CPU Usage: User: 4625.00ms Sys: 578.00ms | Memory Total: 16179.30MB Used: 14164.67MB Free: 2014.64MB
-2024-06-30T03:20:05.937Z - CPU Usage: User: 5093.00ms Sys: 640.00ms | Memory Total: 16179.30MB Used: 14290.74MB Free: 1888.57MB
-2024-06-30T03:21:05.952Z - CPU Usage: User: 5296.00ms Sys: 671.00ms | Memory Total: 16179.30MB Used: 14581.27MB Free: 1598.04MB
-2024-06-30T03:22:05.954Z - CPU Usage: User: 5359.00ms Sys: 687.00ms | Memory Total: 16179.30MB Used: 14775.58MB Free: 1403.72MB
-2024-06-30T03:23:05.969Z - CPU Usage: User: 5453.00ms Sys: 703.00ms | Memory Total: 16179.30MB Used: 14652.86MB Free: 1526.45MB
-2024-06-30T03:24:05.975Z - CPU Usage: User: 5468.00ms Sys: 703.00ms | Memory Total: 16179.30MB Used: 15026.46MB Free: 1152.84MB
-2024-06-30T03:25:05.979Z - CPU Usage: User: 5468.00ms Sys: 703.00ms | Memory Total: 16179.30MB Used: 14985.09MB Free: 1194.21MB
+2024-07-05T07:42:21.721Z - PID 3248
+
+    CPU Usage: User: 265.00ms Sys: 109.00ms Percentage: 0.62%
+
+    Memory Total: 16179.30MB
+    RSS: 80.18MB RSS Percentage: 0.50%
+    HeapTotal: 24.55MB HeapTotal Percentage: 0.15%
+    HeapUsed: 22.81MB HeapUsed Percentage: 0.14%
+    External: 3.48MB External Percentage: 0.02%
+    ArrayBuffer: 0.08MB ArrayBuffer Percentage: 0.00%
+    
+
+2024-07-05T07:43:21.728Z - PID 3248
+
+    CPU Usage: User: 32.00ms Sys: 16.00ms Percentage: 0.08%
+
+    Memory Total: 16179.30MB
+    RSS: 80.78MB RSS Percentage: 0.50%
+    HeapTotal: 25.55MB HeapTotal Percentage: 0.16%
+    HeapUsed: 22.44MB HeapUsed Percentage: 0.14%
+    External: 3.48MB External Percentage: 0.02%
+    ArrayBuffer: 0.08MB ArrayBuffer Percentage: 0.00%
+    
+
+2024-07-05T07:44:21.737Z - PID 3248
+
+    CPU Usage: User: 15.00ms Sys: 16.00ms Percentage: 0.05%
+
+    Memory Total: 16179.30MB
+    RSS: 81.29MB RSS Percentage: 0.50%
+    HeapTotal: 25.55MB HeapTotal Percentage: 0.16%
+    HeapUsed: 22.88MB HeapUsed Percentage: 0.14%
+    External: 3.49MB External Percentage: 0.02%
+    ArrayBuffer: 0.08MB ArrayBuffer Percentage: 0.00%
+    
+
+2024-07-05T07:45:21.737Z - PID 3248
+
+    CPU Usage: User: 17078.00ms Sys: 1437.00ms Percentage: 30.86%
+
+    Memory Total: 16179.30MB
+    RSS: 213.38MB RSS Percentage: 1.32%
+    HeapTotal: 149.42MB HeapTotal Percentage: 0.92%
+    HeapUsed: 48.01MB HeapUsed Percentage: 0.30%
+    External: 6.69MB External Percentage: 0.04%
+    ArrayBuffer: 3.27MB ArrayBuffer Percentage: 0.02%
+    
+
+2024-07-05T07:46:21.737Z - PID 3248
+
+    CPU Usage: User: 19500.00ms Sys: 1625.00ms Percentage: 35.21%
+
+    Memory Total: 16179.30MB
+    RSS: 233.83MB RSS Percentage: 1.45%
+    HeapTotal: 164.55MB HeapTotal Percentage: 1.02%
+    HeapUsed: 63.41MB HeapUsed Percentage: 0.39%
+    External: 10.56MB External Percentage: 0.07%
+    ArrayBuffer: 7.13MB ArrayBuffer Percentage: 0.04%
+    
+
+2024-07-05T07:58:36.847Z - PID 9660
+
+    CPU Usage: User: 13453.00ms Sys: 890.00ms Percentage: 23.87%
+
+    Memory Total: 16179.30MB
+    RSS: 195.70MB RSS Percentage: 1.21%
+    HeapTotal: 148.36MB HeapTotal Percentage: 0.92%
+    HeapUsed: 61.31MB HeapUsed Percentage: 0.38%
+    External: 10.71MB External Percentage: 0.07%
+    ArrayBuffer: 7.21MB ArrayBuffer Percentage: 0.04%
+    
+
+2024-07-05T07:59:36.850Z - PID 9660
+
+    CPU Usage: User: 15531.00ms Sys: 1297.00ms Percentage: 28.05%
+
+    Memory Total: 16179.30MB
+    RSS: 214.36MB RSS Percentage: 1.32%
+    HeapTotal: 162.74MB HeapTotal Percentage: 1.01%
+    HeapUsed: 74.44MB HeapUsed Percentage: 0.46%
+    External: 13.33MB External Percentage: 0.08%
+    ArrayBuffer: 9.83MB ArrayBuffer Percentage: 0.06%
+    
+
+2024-07-05T08:00:36.854Z - PID 9660
+
+    CPU Usage: User: 14609.00ms Sys: 985.00ms Percentage: 25.99%
+
+    Memory Total: 16179.30MB
+    RSS: 219.09MB RSS Percentage: 1.35%
+    HeapTotal: 171.74MB HeapTotal Percentage: 1.06%
+    HeapUsed: 47.13MB HeapUsed Percentage: 0.29%
+    External: 6.24MB External Percentage: 0.04%
+    ArrayBuffer: 2.26MB ArrayBuffer Percentage: 0.01%
+    
+
+2024-07-05T08:01:36.864Z - PID 9660
+
+    CPU Usage: User: 172.00ms Sys: 0.00ms Percentage: 0.29%
+
+    Memory Total: 16179.30MB
+    RSS: 77.60MB RSS Percentage: 0.48%
+    HeapTotal: 33.11MB HeapTotal Percentage: 0.20%
+    HeapUsed: 31.11MB HeapUsed Percentage: 0.19%
+    External: 3.59MB External Percentage: 0.02%
+    ArrayBuffer: 0.08MB ArrayBuffer Percentage: 0.00%
+    
+
+2024-07-05T08:02:36.879Z - PID 9660
+
+    CPU Usage: User: 32.00ms Sys: 0.00ms Percentage: 0.05%
+
+    Memory Total: 16179.30MB
+    RSS: 77.77MB RSS Percentage: 0.48%
+    HeapTotal: 33.11MB HeapTotal Percentage: 0.20%
+    HeapUsed: 31.23MB HeapUsed Percentage: 0.19%
+    External: 3.59MB External Percentage: 0.02%
+    ArrayBuffer: 0.08MB ArrayBuffer Percentage: 0.00%
+    
+
+2024-07-05T08:04:43.641Z - PID 20868
+
+    CPU Usage: User: 15141.00ms Sys: 1109.00ms Percentage: 27.06%
+
+    Memory Total: 16179.30MB
+    RSS: 199.04MB RSS Percentage: 1.23%
+    HeapTotal: 148.11MB HeapTotal Percentage: 0.92%
+    HeapUsed: 72.39MB HeapUsed Percentage: 0.45%
+    External: 14.13MB External Percentage: 0.09%
+    ArrayBuffer: 10.63MB ArrayBuffer Percentage: 0.07%
+    
+
+2024-07-05T08:05:43.640Z - PID 20868
+
+    CPU Usage: User: 18219.00ms Sys: 1344.00ms Percentage: 32.61%
+
+    Memory Total: 16179.30MB
+    RSS: 223.79MB RSS Percentage: 1.38%
+    HeapTotal: 165.74MB HeapTotal Percentage: 1.02%
+    HeapUsed: 129.78MB HeapUsed Percentage: 0.80%
+    External: 27.81MB External Percentage: 0.17%
+    ArrayBuffer: 24.31MB ArrayBuffer Percentage: 0.15%
+    
+
+2024-07-05T08:06:43.654Z - PID 20868
+
+    CPU Usage: User: 3515.00ms Sys: 203.00ms Percentage: 6.20%
+
+    Memory Total: 16179.30MB
+    RSS: 78.19MB RSS Percentage: 0.48%
+    HeapTotal: 33.80MB HeapTotal Percentage: 0.21%
+    HeapUsed: 32.09MB HeapUsed Percentage: 0.20%
+    External: 3.59MB External Percentage: 0.02%
+    ArrayBuffer: 0.08MB ArrayBuffer Percentage: 0.00%
+    
+
+2024-07-05T08:07:43.704Z - PID 20868
+
+    CPU Usage: User: 23860.00ms Sys: 2000.00ms Percentage: 43.06%
+
+    Memory Total: 16179.30MB
+    RSS: 254.62MB RSS Percentage: 1.57%
+    HeapTotal: 198.36MB HeapTotal Percentage: 1.23%
+    HeapUsed: 96.08MB HeapUsed Percentage: 0.59%
+    External: 14.35MB External Percentage: 0.09%
+    ArrayBuffer: 10.85MB ArrayBuffer Percentage: 0.07%
+    
+
+2024-07-05T08:08:43.816Z - PID 20868
+
+    CPU Usage: User: 30390.00ms Sys: 2109.00ms Percentage: 54.06%
+
+    Memory Total: 16179.30MB
+    RSS: 338.07MB RSS Percentage: 2.09%
+    HeapTotal: 265.63MB HeapTotal Percentage: 1.64%
+    HeapUsed: 195.59MB HeapUsed Percentage: 1.21%
+    External: 34.11MB External Percentage: 0.21%
+    ArrayBuffer: 30.61MB ArrayBuffer Percentage: 0.19%
+    
+
+2024-07-05T08:09:44.088Z - PID 20868
+
+    CPU Usage: User: 32016.00ms Sys: 2297.00ms Percentage: 56.93%
+
+    Memory Total: 16179.30MB
+    RSS: 415.90MB RSS Percentage: 2.57%
+    HeapTotal: 330.61MB HeapTotal Percentage: 2.04%
+    HeapUsed: 87.91MB HeapUsed Percentage: 0.54%
+    External: 9.66MB External Percentage: 0.06%
+    ArrayBuffer: 6.16MB ArrayBuffer Percentage: 0.04%
+    
+
+2024-07-05T08:10:44.339Z - PID 20868
+
+    CPU Usage: User: 26281.00ms Sys: 1906.00ms Percentage: 46.78%
+
+    Memory Total: 16179.30MB
+    RSS: 502.02MB RSS Percentage: 3.10%
+    HeapTotal: 392.52MB HeapTotal Percentage: 2.43%
+    HeapUsed: 311.85MB HeapUsed Percentage: 1.93%
+    External: 50.44MB External Percentage: 0.31%
+    ArrayBuffer: 46.94MB ArrayBuffer Percentage: 0.29%
+    
+
+2024-07-05T08:12:32.257Z - PID 20868
+
+    CPU Usage: User: 19813.00ms Sys: 2860.00ms Percentage: 21.01%
+
+    Memory Total: 16179.30MB
+    RSS: 492.64MB RSS Percentage: 3.04%
+    HeapTotal: 407.70MB HeapTotal Percentage: 2.52%
+    HeapUsed: 156.67MB HeapUsed Percentage: 0.97%
+    External: 8.68MB External Percentage: 0.05%
+    ArrayBuffer: 5.26MB ArrayBuffer Percentage: 0.03%
+    
+
+2024-07-05T08:13:32.271Z - PID 20868
+
+    CPU Usage: User: 2640.00ms Sys: 1281.00ms Percentage: 6.53%
+
+    Memory Total: 16179.30MB
+    RSS: 185.82MB RSS Percentage: 1.15%
+    HeapTotal: 121.93MB HeapTotal Percentage: 0.75%
+    HeapUsed: 93.12MB HeapUsed Percentage: 0.58%
+    External: 3.84MB External Percentage: 0.02%
+    ArrayBuffer: 0.08MB ArrayBuffer Percentage: 0.00%
+    
+

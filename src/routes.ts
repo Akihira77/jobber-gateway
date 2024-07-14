@@ -1,4 +1,4 @@
-import { authMiddleware } from "@gateway/services/auth-middleware"
+import { AuthMiddleware } from "@gateway/services/auth-middleware"
 import { buyerRoute } from "@gateway/routes/buyer.route"
 import { sellerRoute } from "@gateway/routes/seller.route"
 import { gigRoute } from "@gateway/routes/gig.route"
@@ -12,7 +12,8 @@ import { authRoute } from "./routes/auth.route"
 import { orderRoute } from "./routes/order.route"
 import { reviewRoute } from "./routes/review.route"
 
-export const BASE_PATH = "/api/gateway/v1"
+// export const BASE_PATH = "/api/gateway/v1"
+export const BASE_PATH = "/gateway"
 
 export const appRoutes = (app: Hono, redis: RedisClient) => {
     app.get("gateway-health", (c: Context) => {
@@ -20,15 +21,16 @@ export const appRoutes = (app: Hono, redis: RedisClient) => {
     })
 
     const api = app.basePath(BASE_PATH)
+    const authMiddleware = new AuthMiddleware()
 
     unauthRoute(api, redis)
 
     api.use(authMiddleware.authOnly)
     authRoute(api, redis)
-    buyerRoute(api)
-    sellerRoute(api)
+    buyerRoute(api, redis)
+    sellerRoute(api, redis)
     chatRoute(api)
-    gigRoute(api)
+    gigRoute(api, redis)
     orderRoute(api)
     reviewRoute(api)
 }

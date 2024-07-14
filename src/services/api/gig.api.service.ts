@@ -1,55 +1,65 @@
-import axios, { AxiosResponse } from "axios"
+import { AxiosResponse, AxiosInstance } from "axios"
 import { AxiosService } from "@gateway/services/axios"
 import { GIG_BASE_URL } from "@gateway/config"
 import { ISellerGig } from "@Akihira77/jobber-shared"
 
 // Axios provider for Authenticated User
-export let axiosGigInstance: ReturnType<typeof axios.create>
+export let axiosGigInstance: AxiosInstance
 
 class GigService {
     // Axios general provider
-    axiosService: AxiosService
+    private readonly axiosService: AxiosService
+    private readonly LIMIT_TIMEOUT: number
 
     constructor() {
         this.axiosService = new AxiosService(`${GIG_BASE_URL}/gig`, "gig")
         axiosGigInstance = this.axiosService.axios
+        this.LIMIT_TIMEOUT = 3 * 1000 + 500
     }
 
     async getGigById(id: string): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.get(`/${id}`)
+        let response = await axiosGigInstance.get(`/${id}`, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
 
         return response
     }
 
     async getSellerActiveGigs(sellerId: string): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.get(`/seller/${sellerId}`)
-
+        let response = await axiosGigInstance.get(`/seller/${sellerId}`, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
         return response
     }
 
     async getSellerInactiveGigs(sellerId: string): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.get(
-            `/seller/inactive/${sellerId}`
+        let response = await axiosGigInstance.get(
+            `/seller/inactive/${sellerId}`,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
-
         return response
     }
 
     async getGigsByCategory(username: string): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.get(`/category/${username}`)
-
+        let response = await axiosGigInstance.get(`/category/${username}`, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
         return response
     }
 
     async getMoreGigsLikeThis(gigId: string): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.get(`/similar/${gigId}`)
-
+        let response = await axiosGigInstance.get(`/similar/${gigId}`, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
         return response
     }
 
     async getTopRatedGigsByCategory(username: string): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.get(`/top/${username}`)
-
+        let response = await axiosGigInstance.get(`/top/${username}`, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
         return response
     }
 
@@ -59,16 +69,19 @@ class GigService {
         size: string,
         type: string
     ): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.get(
-            `/search/${from}/${size}/${type}?${query}`
+        let response = await axiosGigInstance.get(
+            `/search/${from}/${size}/${type}?${query}`,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
-
         return response
     }
 
     async createGig(request: ISellerGig): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.post("/create", request)
-
+        let response = await axiosGigInstance.post("/create", request, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
         return response
     }
 
@@ -76,8 +89,9 @@ class GigService {
         gigId: string,
         request: ISellerGig
     ): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.put(`/update/${gigId}`, request)
-
+        let response = await axiosGigInstance.put(`/update/${gigId}`, request, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
         return response
     }
 
@@ -85,22 +99,27 @@ class GigService {
         gigId: string,
         active: boolean
     ): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.put(`/status/${gigId}`, {
-            active
-        })
-
+        let response = await axiosGigInstance.put(
+            `/status/${gigId}`,
+            {
+                active
+            },
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
+        )
         return response
     }
 
     async deleteGig(gigId: string, sellerId: string): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.delete(`/${gigId}/${sellerId}`)
-
+        let response = await axiosGigInstance.delete(`/${gigId}/${sellerId}`, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
         return response
     }
 
     async seed(count: string): Promise<AxiosResponse> {
-        const response = await axiosGigInstance.put(`/seed/${count}`)
-
+        let response = await axiosGigInstance.put(`/seed/${count}`)
         return response
     }
 }

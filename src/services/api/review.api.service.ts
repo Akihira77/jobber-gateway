@@ -1,13 +1,14 @@
-import axios, { AxiosResponse } from "axios"
+import { AxiosResponse, AxiosInstance } from "axios"
 import { AxiosService } from "@gateway/services/axios"
 import { REVIEW_BASE_URL } from "@gateway/config"
 import { IReviewDocument } from "@Akihira77/jobber-shared"
 
-export let axiosReviewInstance: ReturnType<typeof axios.create>
+export let axiosReviewInstance: AxiosInstance
 
 class ReviewService {
     // Axios general provider
-    axiosService: AxiosService
+    private readonly axiosService: AxiosService
+    private readonly LIMIT_TIMEOUT: number
 
     constructor() {
         this.axiosService = new AxiosService(
@@ -15,11 +16,15 @@ class ReviewService {
             "review"
         )
         axiosReviewInstance = this.axiosService.axios
+        this.LIMIT_TIMEOUT = 3 * 1000 + 500
     }
 
     async getReviewsByGigId(id: string): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosReviewInstance.get(
-            `/gig/${id}`
+            `/gig/${id}`,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
@@ -27,7 +32,10 @@ class ReviewService {
 
     async getReviewsBySellerId(id: string): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosReviewInstance.get(
-            `/seller/${id}`
+            `/seller/${id}`,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
@@ -35,8 +43,11 @@ class ReviewService {
 
     async addReview(data: IReviewDocument): Promise<AxiosResponse> {
         const response: AxiosResponse = await axiosReviewInstance.post(
-            "/",
-            data
+            "",
+            data,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response

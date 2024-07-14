@@ -1,30 +1,36 @@
-import axios, { AxiosResponse } from "axios"
+import { AxiosResponse, AxiosInstance } from "axios"
 import { AxiosService } from "@gateway/services/axios"
 import { AUTH_BASE_URL } from "@gateway/config"
 import { IAuth } from "@Akihira77/jobber-shared"
 
 // Axios provider for Authenticated User
-export let axiosAuthInstance: ReturnType<typeof axios.create>
+export let axiosAuthInstance: AxiosInstance
 
 class AuthService {
     // Axios general provider
-    axiosService: AxiosService
+    private readonly axiosService: AxiosService
+    private readonly LIMIT_TIMEOUT: number
 
     constructor() {
         this.axiosService = new AxiosService(`${AUTH_BASE_URL}/auth`, "auth")
         axiosAuthInstance = this.axiosService.axios
+        this.LIMIT_TIMEOUT = 3 * 1000 + 500
     }
 
     async getCurrentUser(): Promise<AxiosResponse> {
-        const response: AxiosResponse =
-            await axiosAuthInstance.get("/current-user")
+        const response = await axiosAuthInstance.get("/current-user", {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
 
         return response
     }
 
     async getRefreshToken(username: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosAuthInstance.get(
-            `/refresh-token/${username}`
+        const response = await axiosAuthInstance.get(
+            `/refresh-token/${username}`,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
@@ -34,18 +40,24 @@ class AuthService {
         userId: number
         email: string
     }): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosAuthInstance.post(
+        const response = await axiosAuthInstance.post(
             "/resend-verification-email",
-            request
+            request,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
     }
 
     async verifyEmail(token: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosAuthInstance.put(
+        const response = await axiosAuthInstance.put(
             "/verify-email",
-            { token }
+            { token },
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
@@ -55,37 +67,32 @@ class AuthService {
         currentPassword: string,
         newPassword: string
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosAuthInstance.put(
-            "/change-password",
-            { currentPassword, newPassword }
-        )
+        const response = await axiosAuthInstance.put("/change-password", {
+            currentPassword,
+            newPassword
+        })
 
         return response
     }
 
     async signUp(request: IAuth): Promise<AxiosResponse> {
-        const response: AxiosResponse = await this.axiosService.axios.post(
-            "/signup",
-            request
-        )
+        const response = await this.axiosService.axios.post("/signup", request)
 
         return response
     }
 
     async signIn(request: IAuth): Promise<AxiosResponse> {
-        const response: AxiosResponse = await this.axiosService.axios.post(
-            "/signin",
-            request
-        )
+        let response = await this.axiosService.axios.post("/signin", request, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
 
         return response
     }
 
     async forgotPassword(email: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await this.axiosService.axios.put(
-            "/forgot-password",
-            { email }
-        )
+        const response = await this.axiosService.axios.put("/forgot-password", {
+            email
+        })
 
         return response
     }
@@ -95,39 +102,44 @@ class AuthService {
         password: string,
         confirmPassword: string
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await this.axiosService.axios.put(
+        const response = await this.axiosService.axios.put(
             `/reset-password/${token}`,
-            { password, confirmPassword }
+            { password, confirmPassword },
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
     }
 
-    async getGigs(
+    getGigs(
         query: string,
         from: string,
         size: string,
         type: string
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await this.axiosService.axios.get(
-            `/search/gig/${from}/${size}/${type}?${query}`
+        return this.axiosService.makeRequestWithRetry(
+            this.axiosService.axios.get(
+                `/search/gig/${from}/${size}/${type}?${query}`,
+                {
+                    signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+                }
+            ),
+            3
         )
-
-        return response
     }
 
     async getGigById(id: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await this.axiosService.axios.get(
-            `/search/gig/${id}`
-        )
+        let response = await this.axiosService.axios.get(`/search/gig/${id}`, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
 
         return response
     }
 
     async seed(count: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await this.axiosService.axios.put(
-            `/seed/${count}`
-        )
+        const response = await this.axiosService.axios.put(`/seed/${count}`)
 
         return response
     }

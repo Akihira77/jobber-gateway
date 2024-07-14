@@ -1,63 +1,26 @@
 import { GatewayServer } from "@gateway/server"
 import { Logger } from "winston"
 import { winstonLogger } from "@Akihira77/jobber-shared"
-import { Hono } from "hono"
+import { Hono } from "hono/quick"
 
-import { ELASTIC_SEARCH_URL } from "./config"
-import { ElasticSearchClient } from "./elasticsearch"
+import { ELASTIC_SEARCH_URL, NODE_ENV } from "./config"
 import { RedisClient } from "./redis/gateway.redis"
-import path from "node:path"
-import fs from "node:fs"
 import os from "node:os"
+import cluster from "node:cluster"
+import { EventEmitter } from "events"
 
-process.on("uncaughtException", (error) => {
-    console.log(error)
+EventEmitter.setMaxListeners(20)
+
+process.once("SIGINT", () => {
+    process.exit(1)
 })
 
-const logFilePath = path.join(process.cwd(), "/usage.txt")
-
-function getCPUUsage() {
-    const cpuUsage = process.cpuUsage()
-    const userCPUTime = (cpuUsage.user / 1000).toFixed(2) // dalam milidetik
-    const systemCPUTime = (cpuUsage.system / 1000).toFixed(2) // dalam milidetik
-
-    return {
-        user: userCPUTime,
-        system: systemCPUTime
-    }
-}
-
-function getMemoryUsage() {
-    const totalMemory = os.totalmem()
-    const freeMemory = os.freemem()
-    const usedMemory = totalMemory - freeMemory
-
-    return {
-        total: (totalMemory / (1024 * 1024)).toFixed(2), // in MB
-        used: (usedMemory / (1024 * 1024)).toFixed(2), // in MB
-        free: (freeMemory / (1024 * 1024)).toFixed(2) // in MB
-    }
-}
-
-// Fungsi untuk mencatat penggunaan CPU dan memori ke file log
-function logUsage() {
-    const cpuUsage = getCPUUsage()
-    const memoryUsage = getMemoryUsage()
-    const timestamp = new Date().toISOString()
-
-    const logMessage = `${timestamp} - CPU Usage: User: ${cpuUsage.user}ms Sys: ${cpuUsage.system}ms | Memory Total: ${memoryUsage.total}MB Used: ${memoryUsage.used}MB Free: ${memoryUsage.free}MB\n`
-
-    // Tambahkan pesan log ke file log
-    fs.appendFile(logFilePath, logMessage, (err: unknown) => {
-        if (err) {
-            console.log(err)
-        }
-    })
-}
+process.once("SIGTERM", () => {
+    process.exit(1)
+})
 
 class Application {
     private logger: (moduleName: string) => Logger
-    private elastic: ElasticSearchClient
     private redis: RedisClient
     constructor() {
         this.logger = (moduleName?: string) =>
@@ -66,18 +29,39 @@ class Application {
                 moduleName ?? "Gateway Service",
                 "debug"
             )
-        this.elastic = new ElasticSearchClient(this.logger)
         this.redis = new RedisClient(this.logger)
     }
 
     public main(): void {
         const app = new Hono()
         const server = new GatewayServer(app)
-        this.redis.redisConnect()
-        server.start(this.elastic, this.redis, this.logger)
+        // this.redis.redisConnect()
+        server.start(this.redis, this.logger)
     }
 }
 
-const application = new Application()
-application.main()
-setInterval(logUsage, 60 * 1000)
+if (NODE_ENV === "production") {
+    let numCPUs = Math.floor(os.availableParallelism() / 2)
+    numCPUs = 5
+
+    if (cluster.isPrimary) {
+        for (let i = 0; i < numCPUs; i++) {
+            cluster.fork()
+        }
+
+        cluster.on("exit", (worker, code: number, signal: string) => {
+            console.log(
+                `worker process ${worker.process.pid} died, Restarting...`,
+                code,
+                signal
+            )
+            cluster.fork()
+        })
+    } else {
+        const application = new Application()
+        application.main()
+    }
+} else {
+    const application = new Application()
+    application.main()
+}

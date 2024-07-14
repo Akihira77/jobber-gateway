@@ -1,4 +1,3 @@
-import { authMiddleware } from "@gateway/services/auth-middleware"
 import { ChatHandler } from "@gateway/handler/chat.handler"
 import { BASE_PATH } from "@gateway/routes"
 import { Context, Hono } from "hono"
@@ -8,7 +7,6 @@ export function chatRoute(
     api: Hono<Record<string, never>, Record<string, never>, typeof BASE_PATH>
 ) {
     const chatHndlr = new ChatHandler()
-    api.use(authMiddleware.verifyAuth)
 
     api.post("/message", async (c: Context) => {
         const jsonBody = await c.req.json()

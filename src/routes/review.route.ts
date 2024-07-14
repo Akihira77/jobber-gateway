@@ -1,6 +1,5 @@
 import { ReviewHandler } from "@gateway/handler/review.handler"
 import { BASE_PATH } from "@gateway/routes"
-import { authMiddleware } from "@gateway/services/auth-middleware"
 import { Context, Hono } from "hono"
 import { StatusCodes } from "http-status-codes"
 
@@ -8,7 +7,6 @@ export function reviewRoute(
     api: Hono<Record<string, never>, Record<string, never>, typeof BASE_PATH>
 ): void {
     const reviewHndlr = new ReviewHandler()
-    api.use(authMiddleware.verifyAuth)
 
     api.get("/review/gig/:gigId", async (c: Context) => {
         const gigId = c.req.param("gigId")

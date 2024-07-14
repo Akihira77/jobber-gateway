@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios"
+import { AxiosResponse, AxiosInstance } from "axios"
 import { AxiosService } from "@gateway/services/axios"
 import { ORDER_BASE_URL } from "@gateway/config"
 import {
@@ -9,53 +9,62 @@ import {
 } from "@Akihira77/jobber-shared"
 
 // Axios provider for Authenticated User
-export let axiosOrderInstance: ReturnType<typeof axios.create>
+export let axiosOrderInstance: AxiosInstance
 
 class OrderService {
     // Axios general provider
-    axiosService: AxiosService
+    private readonly axiosService: AxiosService
+    private readonly LIMIT_TIMEOUT: number
 
     constructor() {
         this.axiosService = new AxiosService(`${ORDER_BASE_URL}/order`, "order")
         axiosOrderInstance = this.axiosService.axios
+        this.LIMIT_TIMEOUT = 3 * 1000 + 500
     }
 
     async createOrderIntent(
         buyerId: string,
         price: number
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.post(
+        const response = await axiosOrderInstance.post(
             "/create-payment-intent",
-            { buyerId, price }
+            { buyerId, price },
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
     }
 
     async createOrder(data: IOrderDocument): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.post("/", data)
+        let response = await axiosOrderInstance.post("", data, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
 
         return response
     }
 
     async getOrderByOrderId(id: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.get(`/${id}`)
+        const response = await axiosOrderInstance.get(`/${id}`, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
 
         return response
     }
 
     async getOrdersBySellerId(id: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.get(
-            `/seller/${id}`
-        )
+        const response = await axiosOrderInstance.get(`/seller/${id}`, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
 
         return response
     }
 
     async getOrdersByBuyerId(id: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.get(
-            `/buyer/${id}`
-        )
+        const response = await axiosOrderInstance.get(`/buyer/${id}`, {
+            signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+        })
 
         return response
     }
@@ -64,9 +73,12 @@ class OrderService {
         orderId: string,
         data: IOrderMessage
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.put(
+        const response = await axiosOrderInstance.put(
             `/approve-order/${orderId}`,
-            data
+            data,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
@@ -77,9 +89,12 @@ class OrderService {
         data: IOrderMessage,
         paymentIntentId: string
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.put(
+        const response = await axiosOrderInstance.put(
             `/cancel/${orderId}`,
-            { orderData: data, paymentIntentId }
+            { orderData: data, paymentIntentId },
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
@@ -90,9 +105,12 @@ class OrderService {
         orderId: string,
         data: IExtendedDelivery
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.put(
+        const response = await axiosOrderInstance.put(
             `/gig/${type}/${orderId}`,
-            data
+            data,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
@@ -102,9 +120,12 @@ class OrderService {
         orderId: string,
         data: IExtendedDelivery
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.put(
+        const response = await axiosOrderInstance.put(
             `/extension/${orderId}`,
-            data
+            data,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
@@ -114,17 +135,23 @@ class OrderService {
         orderId: string,
         data: IDeliveredWork
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.put(
+        const response = await axiosOrderInstance.put(
             `/deliver-order/${orderId}`,
-            data
+            data,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
     }
 
     async getNotifications(userId: string): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.get(
-            `/notifications/${userId}`
+        const response = await axiosOrderInstance.get(
+            `/notifications/${userId}`,
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
+            }
         )
 
         return response
@@ -133,10 +160,13 @@ class OrderService {
     async markNotificationAsRead(
         notificationId: string
     ): Promise<AxiosResponse> {
-        const response: AxiosResponse = await axiosOrderInstance.put(
+        const response = await axiosOrderInstance.put(
             "/notification/mark-as-read",
             {
                 notificationId
+            },
+            {
+                signal: AbortSignal.timeout(this.LIMIT_TIMEOUT)
             }
         )
 

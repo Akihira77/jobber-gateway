@@ -2,14 +2,13 @@ import { IPaginateProps } from "@Akihira77/jobber-shared"
 import { RedisClient } from "@gateway/redis/gateway.redis"
 import { socketIO } from "@gateway/server"
 import { authService } from "@gateway/services/api/auth.api.service"
-
 export class AuthHandler {
     constructor(private redis: RedisClient) {}
 
     public async getCurrentUser(): Promise<{ message: string; user: any }> {
         const response = await authService.getCurrentUser()
-        const { message, user } = response.data
 
+        const { message, user } = response.data
         return { message, user }
     }
 
@@ -17,6 +16,7 @@ export class AuthHandler {
         reqBody: any
     ): Promise<{ message: string; user: any }> {
         const response = await authService.resendEmail(reqBody)
+
         const { message, user } = response.data
 
         return { message, user }
@@ -67,6 +67,7 @@ export class AuthHandler {
         username: string
     ): Promise<{ token: string; message: string; user: any }> {
         const response = await authService.getRefreshToken(username)
+
         const { token, message, user } = response.data
         return { token, message, user }
     }

@@ -147,3 +147,4 @@ dist
 .npmrc
 .ignore
 build
+*.txt

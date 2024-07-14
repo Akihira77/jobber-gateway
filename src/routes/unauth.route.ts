@@ -1,12 +1,12 @@
 import { NotAuthorizedError } from "@Akihira77/jobber-shared"
-import { SECRET_KEY_ONE, SECRET_KEY_TWO, NODE_ENV } from "@gateway/config"
+import { SECRET_KEY_ONE, SECRET_KEY_TWO } from "@gateway/config"
 import { AuthHandler } from "@gateway/handler/auth.handler"
 import { RedisClient } from "@gateway/redis/gateway.redis"
 import { BASE_PATH } from "@gateway/routes"
-import { authMiddleware } from "@gateway/services/auth-middleware"
 import { Hono, Context } from "hono"
 import { setSignedCookie, deleteCookie, getSignedCookie } from "hono/cookie"
 import { StatusCodes } from "http-status-codes"
+import typia from "typia"
 
 export function unauthRoute(
     api: Hono<Record<string, never>, Record<string, never>, typeof BASE_PATH>,
@@ -15,28 +15,73 @@ export function unauthRoute(
     const authHndlr = new AuthHandler(redis)
 
     api.get("/auth/search/gig/:from/:size/:type", async (c: Context) => {
-        const { from, size, type } = c.req.param()
-        const queries = c.req.query()
+        try {
+            const cachedData = await redis.getDataFromCache(c.req.path)
+            if (!cachedData) {
+                const { from, size, type } = c.req.param()
+                const queries = c.req.query()
 
-        const { gigs, message, total } = await authHndlr.getGigsQuerySearch(
-            { from, size: parseInt(size), type },
-            queries
-        )
+                const { message, total, gigs } =
+                    await authHndlr.getGigsQuerySearch(
+                        { from, size: parseInt(size), type },
+                        queries
+                    )
 
-        return c.json({ message, total, gigs }, StatusCodes.OK)
+                redis.setDataToCache(
+                    c.req.path,
+                    { total: total, gigs: gigs },
+                    10 * 60
+                )
+                return c.json({ message, total, gigs }, StatusCodes.OK)
+            }
+
+            const data = typia.json.isParse<any>(cachedData) as any
+            return c.json(
+                { message: "Gigs data", total: data.total, gigs: data.gigs },
+                StatusCodes.OK
+            )
+        } catch (error) {
+            console.log(error)
+            return c.json(
+                {
+                    message: "Got unexpected error",
+                    total: 0,
+                    gigs: []
+                },
+                StatusCodes.INTERNAL_SERVER_ERROR
+            )
+        }
     })
 
     api.get("/auth/search/gig/:id", async (c: Context) => {
-        const id = c.req.param("id")
-        const { gig, message } = await authHndlr.getGigById(id)
+        try {
+            const cachedData = await redis.getDataFromCache(c.req.path)
+            if (!cachedData) {
+                const id = c.req.param("id")
+                const { gig, message } = await authHndlr.getGigById(id)
 
-        return c.json({ message, gig }, StatusCodes.OK)
+                redis.setDataToCache(c.req.path, gig, 60 * 60)
+                return c.json({ message, gig }, StatusCodes.OK)
+            }
+
+            const gig = typia.json.isParse<any>(cachedData)
+            return c.json({ message: "Gig data", gig }, StatusCodes.OK)
+        } catch (error) {
+            return c.json(
+                {
+                    message: "Got unexpected error",
+                    gig: null
+                },
+                StatusCodes.INTERNAL_SERVER_ERROR
+            )
+        }
     })
 
     api.post("/auth/signup", async (c: Context) => {
         const jsonBody = await c.req.json()
         const { token, message, user } = await authHndlr.signUp(jsonBody)
 
+        const time = 7 * 24 * 60 * 60
         await setSignedCookie(
             c,
             "session",
@@ -44,11 +89,12 @@ export function unauthRoute(
             `${SECRET_KEY_ONE}${SECRET_KEY_TWO}`,
             {
                 httpOnly: true,
-                maxAge: 7 * 24 * 36 * 10 * 1000, // 7 days,
-                secure: NODE_ENV !== "development",
-                ...(NODE_ENV !== "development" && {
-                    sameSite: "none"
-                })
+                maxAge: time, // 7 days,
+                expires: new Date(new Date().valueOf() + time),
+                // 7 * 24 * 60 * 60 * 1000
+                secure: true,
+                sameSite: "none",
+                path: "/"
             }
         )
 
@@ -68,7 +114,7 @@ export function unauthRoute(
             {
                 httpOnly: true,
                 maxAge: time, // 7 days,
-                // expires: new Date(new Date().valueOf() + time),
+                expires: new Date(new Date().valueOf() + time),
                 // 7 * 24 * 60 * 60 * 1000
                 secure: true,
                 sameSite: "none",
@@ -113,17 +159,6 @@ export function unauthRoute(
 
         return c.json({ message }, StatusCodes.OK)
     })
-
-    api.put(
-        "/auth/change-password",
-        authMiddleware.verifyAuth,
-        async (c: Context) => {
-            const jsonBody = await c.req.json()
-            const message = await authHndlr.changePassword(jsonBody)
-
-            return c.json({ message }, StatusCodes.OK)
-        }
-    )
 
     api.put("/auth/seed/:count", async (c: Context) => {
         const count = c.req.param("count")

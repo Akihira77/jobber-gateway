@@ -3,7 +3,7 @@ import {
     IOrderDocument,
     IOrderNotifcation
 } from "@Akihira77/jobber-shared"
-import { MESSAGE_BASE_URL, ORDER_BASE_URL } from "@gateway/config"
+import { MESSAGE_WS_BASE_URL, ORDER_WS_BASE_URL } from "@gateway/config"
 import { RedisClient } from "@gateway/redis/gateway.redis"
 import { Server, Socket } from "socket.io"
 import { io, Socket as SocketClient } from "socket.io-client"
@@ -57,25 +57,23 @@ export class SocketIOAppHandler {
                 this.io.emit("online", response)
             })
 
-            socket.on(
-                "category",
-                async (category: string, username: string) => {
-                    await this.redis.saveUserSelectedCategory(
-                        `selectedCategories:${username}`,
-                        category
-                    )
-                }
-            )
+            socket.on("category", (category: string, username: string) => {
+                this.redis.saveUserSelectedCategory(
+                    `selectedCategories:${username}`,
+                    category
+                )
+            })
         })
     }
 
     // Listening event from another chat service
     private chatSocketServerIOConnection(): void {
-        chatSocketClient = io(`${MESSAGE_BASE_URL}`, {
-            transports: ["polling", "websocket"],
+        chatSocketClient = io(`${MESSAGE_WS_BASE_URL}`, {
+            transports: ["websocket"],
             secure: true,
             withCredentials: true,
-            reconnection: false
+            reconnection: true,
+            retries: 10
         })
 
         chatSocketClient.on("connect", () => {
@@ -109,15 +107,20 @@ export class SocketIOAppHandler {
         chatSocketClient.on("message_updated", (data: IMessageDocument) => {
             this.io.emit("message_updated", data)
         })
+
+        chatSocketClient.once("SIGTERM", () => {
+            chatSocketClient.close()
+        })
     }
 
     // Listening event from order service
     private orderSocketServerIOConnection(): void {
-        orderSocketClient = io(`${ORDER_BASE_URL}`, {
-            transports: ["polling", "websocket"],
+        orderSocketClient = io(`${ORDER_WS_BASE_URL}`, {
+            transports: ["websocket"],
             secure: true,
             withCredentials: true,
-            reconnection: false
+            reconnection: true,
+            retries: 10
         })
 
         orderSocketClient.on("connect", () => {
@@ -150,5 +153,9 @@ export class SocketIOAppHandler {
                 this.io.emit("order_notification", order, orderNotification)
             }
         )
+
+        orderSocketClient.once("SIGTERM", () => {
+            chatSocketClient.close()
+        })
     }
 }

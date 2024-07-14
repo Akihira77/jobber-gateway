@@ -2,13 +2,19 @@ import { buyerService } from "@gateway/services/api/buyer.api.service"
 import { sellerService } from "@gateway/services/api/seller.api.service"
 
 export class UserHandler {
-    public async getBuyerByEmail(): Promise<{ message: string; buyer: any }> {
+    public async getCurrentBuyerByEmail(): Promise<{
+        message: string
+        buyer: any
+    }> {
         const response = await buyerService.getBuyerByEmail()
 
         return { message: response.data.message, buyer: response.data.buyer }
     }
 
-    public async getCurrentBuyer(): Promise<{ message: string; buyer: any }> {
+    public async getCurrentBuyerByUsername(): Promise<{
+        message: string
+        buyer: any
+    }> {
         const response = await buyerService.getCurrentBuyerByUsername()
 
         return { message: response.data.message, buyer: response.data.buyer }

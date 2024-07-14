@@ -2,6 +2,7 @@ import http from "http"
 
 import {
     CLIENT_URL,
+    NODE_ENV,
     PORT,
     REDIS_HOST,
     SECRET_KEY_ONE,
@@ -9,7 +10,6 @@ import {
 } from "@gateway/config"
 import { CustomError } from "@Akihira77/jobber-shared"
 import { StatusCodes } from "http-status-codes"
-import { ElasticSearchClient } from "@gateway/elasticsearch"
 import { appRoutes } from "@gateway/routes"
 import { axiosAuthInstance } from "@gateway/services/api/auth.api.service"
 import { isAxiosError } from "axios"
@@ -17,12 +17,12 @@ import { axiosBuyerInstance } from "@gateway/services/api/buyer.api.service"
 import { axiosSellerInstance } from "@gateway/services/api/seller.api.service"
 import { axiosGigInstance } from "@gateway/services/api/gig.api.service"
 import { Server } from "socket.io"
+import { App } from "uWebSockets.js"
 import { createAdapter } from "@socket.io/redis-adapter"
 import { SocketIOAppHandler } from "@gateway/sockets/socket"
 import { axiosChatInstance } from "@gateway/services/api/chat.api.service"
 import { axiosOrderInstance } from "@gateway/services/api/order.api.service"
 import { axiosReviewInstance } from "@gateway/services/api/review.api.service"
-import { createClient } from "redis"
 import { Logger } from "winston"
 import { Context, Hono, Next } from "hono"
 import { cors } from "hono/cors"
@@ -39,10 +39,16 @@ import { ServerType } from "@hono/node-server/dist/types"
 import { serve } from "@hono/node-server"
 import { logger } from "hono/logger"
 import { RedisClient } from "./redis/gateway.redis"
+import { prometheus } from "@hono/prometheus"
+import { Redis } from "ioredis"
 
 const DEFAULT_ERROR_CODE = 500
 export let socketIO: Server
-const LIMIT_TIMEOUT = 2 * 1000 + 500 // 2s
+const LIMIT_TIMEOUT = 3 * 1000 + 500 // ms
+
+const { printMetrics, registerMetrics } = prometheus({
+    collectDefaultMetrics: true
+})
 
 export class GatewayServer {
     private app: Hono
@@ -52,11 +58,9 @@ export class GatewayServer {
     }
 
     public start(
-        elastic: ElasticSearchClient,
         redis: RedisClient,
         logger: (moduleName: string) => Logger
     ): void {
-        this.startElasticSearch(elastic)
         this.errorHandler(this.app, logger)
         this.securityMiddleware(this.app)
         this.standardMiddleware(this.app)
@@ -86,11 +90,19 @@ export class GatewayServer {
             })
         )
         app.use(async (c: Context, next: Next) => {
-            const token = await getSignedCookie(
+            let token = await getSignedCookie(
                 c,
                 `${SECRET_KEY_ONE}${SECRET_KEY_TWO}`,
                 "session"
             )
+
+            if (!token) {
+                const authHeader = c.req.header("Authorization")
+                if (authHeader && authHeader.startsWith("Bearer ")) {
+                    token = authHeader.split("Bearer ")[1]
+                }
+            }
+
             if (token) {
                 axiosAuthInstance.defaults.headers["Authorization"] =
                     `Bearer ${token}`
@@ -113,7 +125,12 @@ export class GatewayServer {
     }
 
     private standardMiddleware(app: Hono): void {
-        app.use(logger())
+        if (NODE_ENV !== "production") {
+            app.use(logger())
+        }
+        app.use("*", registerMetrics)
+        app.get("/metrics", printMetrics)
+
         app.use(compress())
         app.use(
             bodyLimit({
@@ -136,8 +153,8 @@ export class GatewayServer {
 
         app.use(
             rateLimiter({
-                windowMs: 1 * 60 * 1000, //60s
-                limit: 10,
+                windowMs: 15 * 60 * 1000, //15 minutes
+                limit: 100,
                 standardHeaders: "draft-6",
                 keyGenerator: () => generateRandomNumber(12).toString()
             })
@@ -146,10 +163,6 @@ export class GatewayServer {
 
     private routesMiddleware(app: Hono, redis: RedisClient): void {
         appRoutes(app, redis)
-    }
-
-    private startElasticSearch(elastic: ElasticSearchClient): void {
-        elastic.checkConnection()
     }
 
     private errorHandler(
@@ -174,10 +187,33 @@ export class GatewayServer {
             } else if (err instanceof HTTPException) {
                 return err.getResponse()
             } else if (isAxiosError(err)) {
-                console.log(err)
+                if (err.code === "ERR_CANCELED") {
+                    logger("server.ts - errorHandler()").error(
+                        `${new Date().toISOString()} Request ERR_CANCELED path: ${err.request._options.path}`
+                    )
+                    return c.json(
+                        {
+                            message:
+                                err.config?.timeoutErrorMessage ??
+                                "The request takes too long"
+                        },
+                        StatusCodes.REQUEST_TIMEOUT
+                    )
+                } else if (err.code === "ECONNRESET") {
+                    logger("server.ts - errorHandler()").error(
+                        `${new Date().toISOString()} Request ECONNRESET path: ${err.request._options.path}`
+                    )
+                    return c.json(
+                        {
+                            message:
+                                "The connection is being reset. Try again after sometimes."
+                        },
+                        StatusCodes.INTERNAL_SERVER_ERROR
+                    )
+                }
+
                 logger("server.ts - errorHandler()").error(
-                    `GatewayService Axios Error - ${err?.response?.data?.comingFrom}:`,
-                    err.message
+                    `GatewayService Axios Error - ${err.response?.data} ${err.config?.baseURL}/${err.config?.url}`
                 )
                 return c.json(
                     {
@@ -188,7 +224,7 @@ export class GatewayServer {
                 )
             }
 
-            console.log(err)
+            logger("server.ts - errorHandler()").error(err.message)
             return c.text(
                 "Unexpected error occured. Please try again",
                 StatusCodes.INTERNAL_SERVER_ERROR
@@ -202,11 +238,8 @@ export class GatewayServer {
         logger: (moduleName: string) => Logger
     ): Promise<void> {
         try {
-            const server = this.startHttpServer(app, logger)
-            const io: Server = await this.createSocketIO(
-                server as http.Server,
-                logger
-            )
+            this.startHttpServer(app, logger)
+            const io: Server = await this.createSocketIO(logger)
             this.socketIOConnections(io, redis, logger)
         } catch (error) {
             logger("server.ts - startServer()").error(
@@ -217,25 +250,38 @@ export class GatewayServer {
     }
 
     private async createSocketIO(
-        httpServer: http.Server,
         logger: (moduleName: string) => Logger
     ): Promise<Server> {
-        const io: Server = new Server(httpServer, {
+        const io: Server = new Server({
             cors: {
                 origin: [`${CLIENT_URL}`],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
             }
         })
-        const pubClient = createClient({ url: `${REDIS_HOST}` })
+
+        const uwsApp = App()
+        io.attachApp(uwsApp)
+        const pubClient = new Redis(`${REDIS_HOST}`)
         const subClient = pubClient.duplicate()
 
-        await Promise.all([pubClient.connect(), subClient.connect()])
         io.adapter(createAdapter(pubClient, subClient))
 
         logger("server.ts - createSocketIO()").info(
             "GatewayService SocketIO and Redis Pub-Sub Adapter is established."
         )
         socketIO = io
+
+        uwsApp.listen(Number(PORT) - 1000, (token) => {
+            if (!token) {
+                logger("server.ts - createSocketIO()").warn(
+                    "Port already in use"
+                )
+            } else {
+                logger("server.ts - createSocketIO()").info(
+                    `uWebSockets.js is running on port ${Number(PORT) - 1000}`
+                )
+            }
+        })
         return io
     }
 

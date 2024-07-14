@@ -15,7 +15,9 @@ declare global {
             USERS_BASE_URL: string
             GIG_BASE_URL: string
             MESSAGE_BASE_URL: string
+            MESSAGE_WS_BASE_URL: string
             ORDER_BASE_URL: string
+            ORDER_WS_BASE_URL: string
             REVIEW_BASE_URL: string
             REDIS_HOST: string
             ELASTIC_SEARCH_URL: string

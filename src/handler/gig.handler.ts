@@ -3,6 +3,7 @@ import { gigService } from "@gateway/services/api/gig.api.service"
 import { AxiosResponse } from "axios"
 
 export class GigHandler {
+    constructor() {}
     public async createGig(
         reqBody: any
     ): Promise<{ message: string; gig: any }> {
@@ -65,11 +66,12 @@ export class GigHandler {
 
     public async getGigsMoreLikeThis(
         gigId: string
-    ): Promise<{ message: string; gigs: any }> {
+    ): Promise<{ message: string; total: number; gigs: any }> {
         const response = await gigService.getMoreGigsLikeThis(gigId)
 
         return {
             message: response.data.message,
+            total: response.data.total,
             gigs: response.data.gigs
         }
     }
@@ -96,7 +98,7 @@ export class GigHandler {
             query += `${key}=${value}${index !== lastItemIndex ? "&" : ""}`
         })
 
-        const response: AxiosResponse = await gigService.searchGigs(
+        const response = await gigService.searchGigs(
             query,
             params.from,
             params.size.toString(),
