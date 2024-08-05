@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "d1e113a8-84fe-49cb-b705-5d702046f18c",
-		"name": "Jobber App",
+		"_postman_id": "25616a35-899a-4ae0-83a6-f055d86f3a2f",
+		"name": "Jobber App Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "24368336"
 	},
@@ -78,7 +78,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/auth/search/gig/:id",
+									"raw": "http://127.0.0.1:4000/gateway/auth/search/gig/:id",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -88,9 +88,7 @@
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"auth",
 										"search",
 										"gig",
@@ -111,7 +109,7 @@
 							"request": {
 								"method": "POST",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/auth/signup"
+								"url": "http://localhost:4000/gateway/auth/signup"
 							},
 							"response": []
 						},
@@ -129,7 +127,7 @@
 										}
 									}
 								},
-								"url": "http://127.0.0.1:4000/gateway/auth/signin"
+								"url": "http://localhost:4000/gateway/auth/signin"
 							},
 							"response": []
 						},
@@ -138,7 +136,7 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/auth/signout"
+								"url": "http://localhost:4000/gateway/auth/signout"
 							},
 							"response": []
 						},
@@ -147,7 +145,7 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/auth/verify-email"
+								"url": "http://localhost:4000/gateway/auth/verify-email"
 							},
 							"response": []
 						},
@@ -156,7 +154,7 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/auth/forgot-password"
+								"url": "http://localhost:4000/gateway/auth/forgot-password"
 							},
 							"response": []
 						},
@@ -166,19 +164,14 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/auth/reset-password/:token",
+									"raw": "http://localhost:4000/gateway/auth/reset-password/:token",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"auth",
 										"reset-password",
 										":token"
@@ -198,7 +191,7 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/auth/change-password"
+								"url": "http://localhost:4000/gateway/auth/change-password"
 							},
 							"response": []
 						}
@@ -212,7 +205,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/auth/current-user"
+								"url": "http://localhost:4000/gateway/auth/current-user"
 							},
 							"response": []
 						},
@@ -221,7 +214,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/auth/logged-in-user"
+								"url": "http://localhost:4000/gateway/auth/logged-in-user"
 							},
 							"response": []
 						},
@@ -231,27 +224,22 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/auth/refres-token/:username",
+									"raw": "http://localhost:4000/gateway/auth/refresh-token/:username",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"auth",
-										"refres-token",
+										"refresh-token",
 										":username"
 									],
 									"variable": [
 										{
 											"key": "username",
-											"value": ""
+											"value": "test"
 										}
 									]
 								}
@@ -263,7 +251,7 @@
 							"request": {
 								"method": "POST",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/auth/resend-verification-email"
+								"url": "http://localhost:4000/gateway/auth/resend-verification-email"
 							},
 							"response": []
 						},
@@ -273,19 +261,14 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/auth/logged-in-user/:username",
+									"raw": "http://localhost:4000/gateway/auth/logged-in-user/:username",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"auth",
 										"logged-in-user",
 										":username"
@@ -310,7 +293,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/buyer/email"
+								"url": "http://localhost:4000/gateway/buyer/email"
 							},
 							"response": []
 						},
@@ -319,7 +302,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/buyer/username"
+								"url": "http://localhost:4000/gateway/buyer/username"
 							},
 							"response": []
 						},
@@ -329,19 +312,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/buyer/:username",
+									"raw": "http://localhost:4000/gateway/buyer/:username",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"buyer",
 										":username"
 									],
@@ -366,19 +344,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/seller/id/:sellerId",
+									"raw": "http://localhost:4000/gateway/seller/id/:sellerId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"seller",
 										"id",
 										":sellerId"
@@ -399,19 +372,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/seller/username/:username",
+									"raw": "http://localhost:4000/gateway/seller/username/:username",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"seller",
 										"username",
 										":username"
@@ -432,19 +400,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/seller/random/:count",
+									"raw": "http://localhost:4000/gateway/seller/random/:count",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"seller",
 										"random",
 										":count"
@@ -464,7 +427,7 @@
 							"request": {
 								"method": "POST",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/seller/create"
+								"url": "http://localhost:4000/gateway/seller/create"
 							},
 							"response": []
 						},
@@ -474,19 +437,14 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/seller/update/:sellerId",
+									"raw": "http://localhost:4000/gateway/seller/update/:sellerId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"seller",
 										"update",
 										":sellerId"
@@ -526,7 +484,7 @@
 										}
 									}
 								},
-								"url": "http://127.0.0.1:4000/gateway/message"
+								"url": "http://localhost:4000/gateway/message"
 							},
 							"response": []
 						},
@@ -535,7 +493,7 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/message/offer"
+								"url": "http://localhost:4000/gateway/message/offer"
 							},
 							"response": []
 						},
@@ -544,7 +502,7 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/message/mark-as-read"
+								"url": "http://localhost:4000/gateway/message/mark-as-read"
 							},
 							"response": []
 						},
@@ -553,7 +511,7 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/message"
+								"url": "http://localhost:4000/gateway/message"
 							},
 							"response": []
 						},
@@ -563,19 +521,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/message/conversation/:senderUsername/:receiverUsername",
+									"raw": "http://localhost:4000/gateway/message/conversation/:senderUsername/:receiverUsername",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"message",
 										"conversation",
 										":senderUsername",
@@ -601,19 +554,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/message/conversations/:username",
+									"raw": "http://localhost:4000/gateway/message/conversations/:username",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"message",
 										"conversations",
 										":username"
@@ -634,19 +582,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/message/:senderUsername/:receiverUsername",
+									"raw": "http://localhost:4000/gateway/message/:senderUsername/:receiverUsername",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"message",
 										":senderUsername",
 										":receiverUsername"
@@ -671,19 +614,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/message/:conversationId",
+									"raw": "http://localhost:4000/gateway/message/:conversationId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"message",
 										":conversationId"
 									],
@@ -708,19 +646,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/gig/:gigId",
+									"raw": "http://localhost:4000/gateway/gig/:gigId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"gig",
 										":gigId"
 									],
@@ -740,19 +673,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/gig/seller/:sellerId",
+									"raw": "http://localhost:4000/gateway/gig/seller/:sellerId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"gig",
 										"seller",
 										":sellerId"
@@ -773,19 +701,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/gig/inactive/:sellerId",
+									"raw": "http://localhost:4000/gateway/gig/inactive/:sellerId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"gig",
 										"inactive",
 										":sellerId"
@@ -806,13 +729,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/gateway/gig/search/:from/:size/:type?min=5&max=100&delivery_time=4&query=data",
+									"raw": "http://localhost:4000/gateway/gig/search/:from/:size/:type?min=5&max=100&delivery_time=4&query=data",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
@@ -865,19 +785,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/gig/category/:username",
+									"raw": "http://localhost:4000/gateway/gig/category/:username",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"gig",
 										"category",
 										":username"
@@ -898,19 +813,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/gig/top/:username",
+									"raw": "http://localhost:4000/gateway/gig/top/:username",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"gig",
 										"top",
 										":username"
@@ -931,19 +841,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/gig/similar/:gigId",
+									"raw": "http://localhost:4000/gateway/gig/similar/:gigId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"gig",
 										"similar",
 										":gigId"
@@ -963,7 +868,7 @@
 							"request": {
 								"method": "POST",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/gig/create"
+								"url": "http://localhost:4000/gateway/gig/create"
 							},
 							"response": []
 						},
@@ -973,19 +878,14 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/gig/:gigId",
+									"raw": "http://localhost:4000/gateway/gig/:gigId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"gig",
 										":gigId"
 									],
@@ -1005,19 +905,14 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/gig/active-status/:gigId",
+									"raw": "http://localhost:4000/gateway/gig/active-status/:gigId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"gig",
 										"active-status",
 										":gigId"
@@ -1038,19 +933,14 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/gig/:gigId/:sellerId",
+									"raw": "http://localhost:4000/gateway/gig/:gigId/:sellerId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"gig",
 										":gigId",
 										":sellerId"
@@ -1080,19 +970,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/order/:orderId",
+									"raw": "http://localhost:4000/gateway/order/:orderId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"order",
 										":orderId"
 									],
@@ -1112,19 +997,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/order/seller/:sellerId",
+									"raw": "http://localhost:4000/gateway/order/seller/:sellerId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"order",
 										"seller",
 										":sellerId"
@@ -1145,19 +1025,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/order/buyer/:buyerId",
+									"raw": "http://localhost:4000/gateway/order/buyer/:buyerId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"order",
 										"buyer",
 										":buyerId"
@@ -1178,19 +1053,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/order/notification/:userTo",
+									"raw": "http://localhost:4000/gateway/order/notification/:userTo",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"order",
 										"notification",
 										":userTo"
@@ -1210,7 +1080,7 @@
 							"request": {
 								"method": "POST",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/order/create-payment-intent"
+								"url": "http://localhost:4000/gateway/order/create-payment-intent"
 							},
 							"response": []
 						},
@@ -1228,7 +1098,7 @@
 										}
 									}
 								},
-								"url": "http://127.0.0.1:4000/gateway/order"
+								"url": "http://localhost:4000/gateway/order"
 							},
 							"response": []
 						},
@@ -1238,19 +1108,14 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/order/approve-order/:orderId",
+									"raw": "http://localhost:4000/gateway/order/approve-order/:orderId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"order",
 										"approve-order",
 										":orderId"
@@ -1271,19 +1136,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/order/cancel/:orderId",
+									"raw": "http://localhost:4000/gateway/order/cancel/:orderId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"order",
 										"cancel",
 										":orderId"
@@ -1304,19 +1164,14 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/order/gig/:type/:orderId",
+									"raw": "http://localhost:4000/gateway/order/gig/:type/:orderId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"order",
 										"gig",
 										":type",
@@ -1342,19 +1197,14 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/order/extension/:orderId",
+									"raw": "http://localhost:4000/gateway/order/extension/:orderId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"order",
 										"extension",
 										":orderId"
@@ -1375,19 +1225,14 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/order/deliver-order/:orderId",
+									"raw": "http://localhost:4000/gateway/order/deliver-order/:orderId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"order",
 										"deliver-order",
 										":orderId"
@@ -1408,19 +1253,14 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/order/notification/:notificationId",
+									"raw": "http://localhost:4000/gateway/order/notification/:notificationId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"order",
 										"notification",
 										":notificationId"
@@ -1446,19 +1286,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/review/gig/:gigId",
+									"raw": "http://localhost:4000/gateway/review/gig/:gigId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"review",
 										"gig",
 										":gigId"
@@ -1479,19 +1314,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:4000/api/gateway/v1/review/seller/:sellerId",
+									"raw": "http://localhost:4000/gateway/review/seller/:sellerId",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"localhost"
 									],
 									"port": "4000",
 									"path": [
-										"api",
 										"gateway",
-										"v1",
 										"review",
 										"seller",
 										":sellerId"
@@ -1511,7 +1341,7 @@
 							"request": {
 								"method": "POST",
 								"header": [],
-								"url": "http://127.0.0.1:4000/api/gateway/v1/review"
+								"url": "http://localhost:4000/gateway/review"
 							},
 							"response": []
 						}
@@ -1522,7 +1352,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://0.0.0.0:4000/gateway-health"
+						"url": "http://localhost:4000/gateway-health"
 					},
 					"response": []
 				},
@@ -1531,7 +1361,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://127.0.0.1:4000/metrics"
+						"url": "http://localhost:4000/metrics"
 					},
 					"response": []
 				}
@@ -1857,7 +1687,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:4007/api/v1/review"
+						"url": "http://localhost:4007/review"
 					},
 					"response": []
 				},
@@ -1866,7 +1696,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://127.0.0.1:4007/review/seller/1"
+						"url": "http://localhost:4000/review/seller/1"
 					},
 					"response": []
 				},
@@ -1875,7 +1705,25 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://127.0.0.1:4007/api/v1/review/gig/1"
+						"url": {
+							"raw": "http://localhost:4000/review/gig/:gigId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"review",
+								"gig",
+								":gigId"
+							],
+							"variable": [
+								{
+									"key": "gigId",
+									"value": "1"
+								}
+							]
+						}
 					},
 					"response": []
 				},
