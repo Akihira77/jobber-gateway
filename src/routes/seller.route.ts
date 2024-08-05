@@ -21,7 +21,12 @@ export function sellerRoute(
                 const { message, seller } =
                     await userHndlr.getSellerById(sellerId)
 
-                redis.setDataToCache(`seller-id:${sellerId}`, seller, 5 * 60)
+                redis.setDataToCache(
+                    `seller-id:${sellerId}`,
+                    seller,
+                    true,
+                    5 * 60
+                )
                 return c.json({ message, seller }, StatusCodes.OK)
             }
 
@@ -47,6 +52,7 @@ export function sellerRoute(
                 redis.setDataToCache(
                     `seller-username:${username}`,
                     seller,
+                    true,
                     5 * 60
                 )
                 return c.json({ message, seller }, StatusCodes.OK)
@@ -75,6 +81,7 @@ export function sellerRoute(
                 redis.setDataToCache(
                     `random-seller-count:${count}`,
                     sellers,
+                    true,
                     60
                 )
                 return c.json({ message, sellers }, StatusCodes.OK)
@@ -100,6 +107,7 @@ export function sellerRoute(
         redis.setDataToCache(
             `seller-username:${seller.username}`,
             seller,
+            true,
             5 * 60
         )
         return c.json({ message, seller }, StatusCodes.CREATED)
@@ -116,6 +124,7 @@ export function sellerRoute(
         redis.setDataToCache(
             `seller-username:${seller.username}`,
             seller,
+            true,
             5 * 60
         )
         return c.json({ message, seller }, StatusCodes.OK)

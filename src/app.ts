@@ -20,7 +20,7 @@ process.once("SIGTERM", () => {
 })
 
 class Application {
-    private logger: (moduleName: string) => Logger
+    private logger: (moduleName?: string) => Logger
     private redis: RedisClient
     constructor() {
         this.logger = (moduleName?: string) =>
@@ -41,7 +41,7 @@ class Application {
 }
 
 if (NODE_ENV === "production") {
-    let numCPUs = Math.floor(os.availableParallelism() / 2)
+    let numCPUs = Math.floor(os.availableParallelism())
     numCPUs = 5
 
     if (cluster.isPrimary) {

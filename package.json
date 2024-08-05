@@ -6,7 +6,7 @@
     "scripts": {
         "start:dev": "set NODE_ENV=development&&nodemon -r tsconfig-paths/register src/app.ts | pino-pretty -c",
         "start:prod": "set NODE_ENV=production&&nodemon -r tsconfig-paths/register src/app.ts | pino-pretty -c",
-        "start": "NODE_ENV=production node --trace-warnings build/src/app.js -gateway",
+        "start": "NODE_ENV=production node build/src/app.js -gateway",
         "dev": "NODE_ENV=production node --trace-warnings --inspect ./build/src/app.js",
         "stop": "pm2 stop all",
         "delete": "pm2 delete all",
@@ -39,6 +39,7 @@
         "ioredis": "^5.4.1",
         "nodemon": "^3.0.2",
         "pino-pretty": "^10.3.1",
+        "rate-limit-redis": "^4.2.0",
         "socket.io": "^4.7.4",
         "socket.io-client": "^4.7.4",
         "typescript": "^5.3.3",

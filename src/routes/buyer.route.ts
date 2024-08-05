@@ -19,28 +19,25 @@ export function buyerRoute(
 
     api.get("/buyer/username", async (c: Context) => {
         const { buyer, message } = await userHndlr.getCurrentBuyerByUsername()
-
+        redis
         return c.json({ message, buyer }, StatusCodes.OK)
     })
 
     api.get("/buyer/:username", async (c: Context) => {
         try {
             const username = c.req.param("username")
-            const cachedData = await redis.getDataFromCache(c.req.path)
-            if (!cachedData) {
-                const { buyer, message } =
-                    await userHndlr.getBuyerByUsername(username)
-
-                redis.setDataToCache(
-                    `buyer-username:${username}`,
-                    buyer,
-                    30 * 60
-                )
-                return c.json({ message, buyer }, StatusCodes.OK)
+            // const cachedData = await redis.getDataFromCache(c.req.path)
+            const cachedData = null
+            if (cachedData) {
+                const buyer = typia.json.isParse<any>(cachedData)
+                return c.json({ message: "Buyer data", buyer }, StatusCodes.OK)
             }
 
-            const buyer = typia.json.isParse<any>(cachedData)
-            return c.json({ message: "Buyer data", buyer }, StatusCodes.OK)
+            const { buyer, message } =
+                await userHndlr.getBuyerByUsername(username)
+
+            // redis.setDataToCache(`buyer-username:${username}`, buyer, 30 * 60)
+            return c.json({ message, buyer }, StatusCodes.OK)
         } catch (error) {
             return c.json(
                 {

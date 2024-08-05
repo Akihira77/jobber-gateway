@@ -15,15 +15,16 @@ export function gigRoute(
         try {
             const gigId = c.req.param("gigId")
             const cachedData = await redis.getDataFromCache(`gig:${gigId}`)
-            if (!cachedData) {
-                const { message, gig } = await gigHndlr.getGigById(gigId)
-
-                redis.setDataToCache(`gig:${gigId}`, { gig: gig }, 60 * 60)
-                return c.json({ message, gig }, StatusCodes.OK)
+            // const cachedData = null
+            if (cachedData) {
+                const { gig } = typia.json.isParse<any>(cachedData)
+                return c.json({ message: "Gig data", gig }, StatusCodes.OK)
             }
 
-            const { gig } = typia.json.isParse<any>(cachedData)
-            return c.json({ message: "Gig data", gig }, StatusCodes.OK)
+            const { message, gig } = await gigHndlr.getGigById(gigId)
+
+            redis.setDataToCache(`gig:${gigId}`, { gig: gig }, true, 60 * 60)
+            return c.json({ message, gig }, StatusCodes.OK)
         } catch (error) {
             return c.json(
                 { message: "Got unexpected error", gig: null },
@@ -38,20 +39,21 @@ export function gigRoute(
             const cachedData = await redis.getDataFromCache(
                 `seller-gigs:${sellerId}`
             )
-            if (!cachedData) {
-                const { message, gigs } =
-                    await gigHndlr.getSellerActiveGigs(sellerId)
+            // const cachedData = null
+            if (cachedData) {
+                const gigs = typia.json.isParse<any>(cachedData)
 
-                redis.setDataToCache(`seller-gigs:${sellerId}`, gigs, 60 * 60)
-                return c.json({ message, gigs }, StatusCodes.OK)
+                return c.json(
+                    { message: "Seller active gigs", gigs },
+                    StatusCodes.OK
+                )
             }
 
-            const gigs = typia.json.isParse<any>(cachedData)
+            const { message, gigs } =
+                await gigHndlr.getSellerActiveGigs(sellerId)
 
-            return c.json(
-                { message: "Seller active gigs", gigs },
-                StatusCodes.OK
-            )
+            redis.setDataToCache(`seller-gigs:${sellerId}`, gigs, true, 60 * 60)
+            return c.json({ message, gigs }, StatusCodes.OK)
         } catch (error) {
             return c.json(
                 { message: "Got unexpected error", gigs: [] },
@@ -66,23 +68,25 @@ export function gigRoute(
             const cachedData = await redis.getDataFromCache(
                 `seller-inactive-gigs:${sellerId}`
             )
-            if (!cachedData) {
-                const { message, gigs } =
-                    await gigHndlr.getSellerInactiveGigs(sellerId)
-
-                redis.setDataToCache(
-                    `seller-inactive-gigs:${sellerId}`,
-                    gigs,
-                    60 * 60
+            // const cachedData = null
+            if (cachedData) {
+                const gigs = typia.json.isParse<any>(cachedData)
+                return c.json(
+                    { message: "Seller inactive gigs", gigs },
+                    StatusCodes.OK
                 )
-                return c.json({ message, gigs }, StatusCodes.OK)
             }
 
-            const gigs = typia.json.isParse<any>(cachedData)
-            return c.json(
-                { message: "Seller inactive gigs", gigs },
-                StatusCodes.OK
+            const { message, gigs } =
+                await gigHndlr.getSellerInactiveGigs(sellerId)
+
+            redis.setDataToCache(
+                `seller-inactive-gigs:${sellerId}`,
+                gigs,
+                true,
+                60 * 60
             )
+            return c.json({ message, gigs }, StatusCodes.OK)
         } catch (error) {
             return c.json(
                 { message: "Got unexpected error", gigs: [] },
@@ -94,25 +98,29 @@ export function gigRoute(
     api.get("/gig/search/:from/:size/:type", async (c: Context) => {
         try {
             const cachedData = await redis.getDataFromCache(c.req.path)
-            if (!cachedData) {
-                const { from, size, type } = c.req.param()
-                const queries = c.req.query()
-                const { message, total, gigs } =
-                    await gigHndlr.getGigsQuerySearch(
-                        { from, size: parseInt(size), type },
-                        queries
-                    )
-
-                redis.setDataToCache(
-                    c.req.path,
-                    { total: total, gigs: gigs },
-                    10 * 60
+            // const cachedData = null
+            if (cachedData) {
+                const { total, gigs } = typia.json.isParse<any>(cachedData)
+                return c.json(
+                    { message: "Gigs data", total, gigs },
+                    StatusCodes.OK
                 )
-                return c.json({ message, total, gigs }, StatusCodes.OK)
             }
 
-            const { total, gigs } = typia.json.isParse<any>(cachedData)
-            return c.json({ message: "Gigs data", total, gigs }, StatusCodes.OK)
+            const { from, size, type } = c.req.param()
+            const queries = c.req.query()
+            const { message, total, gigs } = await gigHndlr.getGigsQuerySearch(
+                { from, size: parseInt(size), type },
+                queries
+            )
+
+            redis.setDataToCache(
+                c.req.path,
+                { total: total, gigs: gigs },
+                true,
+                10 * 60
+            )
+            return c.json({ message, total, gigs }, StatusCodes.OK)
         } catch (error) {
             return c.json(
                 { message: "Got unexpected error", total: 0, gigs: [] },
@@ -144,7 +152,7 @@ export function gigRoute(
                 const { message, gigs } =
                     await gigHndlr.getGigsMoreLikeThis(gigId)
 
-                redis.setDataToCache(c.req.path, gigs, 5 * 60)
+                redis.setDataToCache(c.req.path, gigs, true, 5 * 60)
                 return c.json({ message, gigs }, StatusCodes.OK)
             }
 
@@ -163,7 +171,7 @@ export function gigRoute(
         const jsonBody = await c.req.json()
         const { message, gig } = await gigHndlr.createGig(jsonBody)
 
-        redis.setDataToCache(`gig:${gig._id}`, gig, 60 * 60)
+        redis.setDataToCache(`gig:${gig._id}`, gig, true, 60 * 60)
         return c.json({ message, gig }, StatusCodes.CREATED)
     })
 
@@ -172,7 +180,7 @@ export function gigRoute(
         const jsonBody = await c.req.json()
         const { message, gig } = await gigHndlr.updateGig(gigId, jsonBody)
 
-        redis.setDataToCache(`gig:${gig._id}`, { gig: gig }, 60 * 60)
+        redis.setDataToCache(`gig:${gig._id}`, { gig: gig }, true, 60 * 60)
         return c.json({ message, gig }, StatusCodes.OK)
     })
 
@@ -184,7 +192,7 @@ export function gigRoute(
             jsonBody
         )
 
-        redis.setDataToCache(`gig:${gig._id}`, { gig: gig }, 60 * 60)
+        redis.setDataToCache(`gig:${gig._id}`, { gig: gig }, true, 60 * 60)
         return c.json({ message, gig }, StatusCodes.OK)
     })
 

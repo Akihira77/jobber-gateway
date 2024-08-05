@@ -17,29 +17,34 @@ export function unauthRoute(
     api.get("/auth/search/gig/:from/:size/:type", async (c: Context) => {
         try {
             const cachedData = await redis.getDataFromCache(c.req.path)
-            if (!cachedData) {
-                const { from, size, type } = c.req.param()
-                const queries = c.req.query()
-
-                const { message, total, gigs } =
-                    await authHndlr.getGigsQuerySearch(
-                        { from, size: parseInt(size), type },
-                        queries
-                    )
-
-                redis.setDataToCache(
-                    c.req.path,
-                    { total: total, gigs: gigs },
-                    10 * 60
+            // const cachedData = null
+            if (cachedData) {
+                const data = typia.json.isParse<any>(cachedData) as any
+                return c.json(
+                    {
+                        message: "Gigs data",
+                        total: data.total,
+                        gigs: data.gigs
+                    },
+                    StatusCodes.OK
                 )
-                return c.json({ message, total, gigs }, StatusCodes.OK)
             }
 
-            const data = typia.json.isParse<any>(cachedData) as any
-            return c.json(
-                { message: "Gigs data", total: data.total, gigs: data.gigs },
-                StatusCodes.OK
+            const { from, size, type } = c.req.param()
+            const queries = c.req.query()
+
+            const { message, total, gigs } = await authHndlr.getGigsQuerySearch(
+                { from, size: parseInt(size), type },
+                queries
             )
+
+            redis.setDataToCache(
+                c.req.path,
+                { total: total, gigs: gigs },
+                true,
+                10 * 60
+            )
+            return c.json({ message, total, gigs }, StatusCodes.OK)
         } catch (error) {
             console.log(error)
             return c.json(
@@ -60,7 +65,7 @@ export function unauthRoute(
                 const id = c.req.param("id")
                 const { gig, message } = await authHndlr.getGigById(id)
 
-                redis.setDataToCache(c.req.path, gig, 60 * 60)
+                redis.setDataToCache(c.req.path, gig, true, 60 * 60)
                 return c.json({ message, gig }, StatusCodes.OK)
             }
 

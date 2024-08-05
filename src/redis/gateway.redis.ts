@@ -56,10 +56,21 @@ export class RedisClient {
     public setDataToCache(
         key: string,
         value: any,
+        expiry: boolean = true,
         ttl: number
     ): Promise<string | null> {
         try {
-            return this.client.set(key, typia.json.stringify(value), "EX", ttl)
+            if (expiry) {
+                return this.client.set(
+                    key,
+                    typia.json.stringify(value),
+                    "EX",
+                    ttl
+                )
+            }
+
+            return this.client.set(key, typia.json.stringify(value), "NX")
+
             // return this.client.set(key, typia.json.stringify(value), {
             //     EX: ttl
             // })

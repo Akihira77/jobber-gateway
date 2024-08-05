@@ -7,7 +7,6 @@ import Axios, {
 import { createSigner } from "fast-jwt"
 import { GATEWAY_JWT_TOKEN } from "@gateway/config"
 import axiosRetry from "axios-retry"
-import { buildMemoryStorage, setupCache } from "axios-cache-interceptor"
 import axiosRateLimiter from "axios-rate-limit"
 
 export class AxiosService {
@@ -49,9 +48,30 @@ export class AxiosService {
             timeoutErrorMessage: "The request takes too long"
         })
 
-        const axios = setupCache(instance, {
-            storage: buildMemoryStorage(false, 5 * 1000)
-        })
+        // const axios = setupCache(instance, {
+        //     storage: buildStorage({
+        //         set: (key: string, value: any): MaybePromise<void> => {
+        //             this.redis.setDataToCache(key, value, 5 * 60)
+        //             return
+        //         },
+
+        //         find: async (
+        //             key: string
+        //         ): Promise<StorageValue | undefined> => {
+        //             const cachedData = await this.redis.getDataFromCache(key)
+        //             if (cachedData) {
+        //                 const jsonData = typia.json.isParse<any>(cachedData)
+        //                 return jsonData
+        //             }
+
+        //             return undefined
+        //         },
+
+        //         remove: (key: string) => {
+        //             this.redis.removeDataFromCache(key)
+        //         }
+        //     })
+        // })
 
         axiosRetry(instance, {
             retries: 3,
@@ -69,7 +89,7 @@ export class AxiosService {
             perMilliseconds: 1000
         })
 
-        return axios
+        return instance
     }
 
     public async makeRequestWithRetry(

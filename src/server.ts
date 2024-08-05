@@ -31,7 +31,6 @@ import { timeout } from "hono/timeout"
 import { csrf } from "hono/csrf"
 import { secureHeaders } from "hono/secure-headers"
 import { bodyLimit } from "hono/body-limit"
-import { rateLimiter } from "hono-rate-limiter"
 import { HTTPException } from "hono/http-exception"
 import { getSignedCookie } from "hono/cookie"
 import { StatusCode } from "hono/utils/http-status"
@@ -41,6 +40,7 @@ import { logger } from "hono/logger"
 import { RedisClient } from "./redis/gateway.redis"
 import { prometheus } from "@hono/prometheus"
 import { Redis } from "ioredis"
+// import { rateLimiter } from "hono-rate-limiter"
 
 const DEFAULT_ERROR_CODE = 500
 export let socketIO: Server
@@ -59,7 +59,7 @@ export class GatewayServer {
 
     public start(
         redis: RedisClient,
-        logger: (moduleName: string) => Logger
+        logger: (moduleName?: string) => Logger
     ): void {
         this.errorHandler(this.app, logger)
         this.securityMiddleware(this.app)
@@ -144,21 +144,23 @@ export class GatewayServer {
             })
         )
 
-        const generateRandomNumber = (length: number): number => {
-            return (
-                Math.floor(Math.random() * (9 * Math.pow(10, length - 1))) +
-                Math.pow(10, length - 1)
-            )
-        }
+        // const generateRandomNumber = (length: number): number => {
+        //     return (
+        //         Math.floor(Math.random() * (9 * Math.pow(10, length - 1))) +
+        //         Math.pow(10, length - 1)
+        //     )
+        // }
 
-        app.use(
-            rateLimiter({
-                windowMs: 15 * 60 * 1000, //15 minutes
-                limit: 100,
-                standardHeaders: "draft-6",
-                keyGenerator: () => generateRandomNumber(12).toString()
-            })
-        )
+        // app.use(
+        //     rateLimiter({
+        //         windowMs: 10 * 60 * 1000, // 600s
+        //         limit: 100,
+        //         standardHeaders: "draft-6",
+        //         keyGenerator: (c: Context) => {
+        //             return c.req.url
+        //         }
+        //     })
+        // )
     }
 
     private routesMiddleware(app: Hono, redis: RedisClient): void {
